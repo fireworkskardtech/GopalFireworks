@@ -291,7 +291,7 @@ database.ref('customers').on('child_added', function(data) {
   showcustomernumber(data.val().phonenumber);
 });
 database.ref('products').on('child_added', function(data) {
-  showitemcodes(data.val().itemcode);
+  showitemcodes(data.val().itemcode+'|'+data.val().name);
 });
 function returnCurrentUnit() {
   $('#showunitsdiv').empty();
@@ -385,6 +385,8 @@ function autocomplete(inp, arr) {
         b.addEventListener("click", function(e) {
           /* insert the value for the autocomplete text field: */
           inp.value = this.getElementsByTagName("input")[0].value;
+          inp.value = inp.value.split("|")[0]
+          console.log("Value is "+inp.value);
           /*close the list of autocompleted values,
               (or any other open lists of autocompleted values:*/
           closeAllLists();
@@ -543,6 +545,11 @@ function new_product_data(name, itemcode, companyname, category, subcategory, un
     unit:unit,
     name: name
   });
+  database.ref('purchaseorder/' + itemcode).set({
+    itemcode: itemcode,
+    unit:unit,
+    name: name
+  });
 }
 function update_product_data(name, itemcode, companyname, category, subcategory, unit, comment) {
   database.ref('products/' + itemcode).update({
@@ -555,6 +562,11 @@ function update_product_data(name, itemcode, companyname, category, subcategory,
     comment: comment
   });
   database.ref('inventory/' + itemcode).update({
+    itemcode: itemcode,
+    unit:unit,
+    name: name
+  });
+  database.ref('purchaseorder/' + itemcode).update({
     itemcode: itemcode,
     unit:unit,
     name: name
@@ -1302,7 +1314,7 @@ $("#btnAddItems").click(function() {
           caseunitadd = caseunitadd+parseInt(caseunit);
           centadd = centadd+parseInt(cent);
           kattaadd = kattaadd+parseInt(katta);
-          add_itemToInv_CaseCentKatta_data(itemcodeadd,caseunitadd,centadd,kattadd,today);
+          add_itemToInv_CaseCentKatta_data(itemcodeadd,caseunitadd,centadd,kattaadd,today);
         });
       break;
       //Verified upto here
@@ -1458,7 +1470,7 @@ function add_itemToInv_BagKgs_data(itemcode, bundle, kgs,today) {
   database.ref('inventory/' + itemcode).update({itemcode: itemcode, bag: bag, kgs: kgs, last_added:today});
 }
 function add_itemToInv_CaseCentKatta_data(itemcode, caseunit, cent, katta,today) {
-  database.ref('inventory/' + itemcode).update({itemcode: itemcode, case: caseunit, katta: katta, last_added:today});
+  database.ref('inventory/' + itemcode).update({itemcode: itemcode, case: caseunit, cent:cent,katta: katta, last_added:today});
 }
 function add_itemToInv_CaseTube_data(itemcode, caseunit, tube,today) {
   database.ref('inventory/' + itemcode).update({itemcode: itemcode, case: caseunit, tube: tube, last_added:today});
@@ -1614,12 +1626,12 @@ function add_itemToInv_BagPieces_data(itemcode, bag, piece,today) {
     }
     function update_item_product_data_table(itemcode,name,qty,last_added){
       var existence = document.getElementById(itemcode);
-    if(existence){
+      if(existence){
         $("#AddItemsInvTable #" + itemcode).html('<th>' + itemcode + '</th><th>' + name + '</th><th>' + qty + '</th><th>' + last_added+ '</th>');
-    }
-    else{
+      }
+      else{
       $("#AddItemsInvTable").prepend('<tr id="' + itemcode + '"><th>' + itemcode + '</th><th>' + name + '</th><th>' + qty + '</th><th>' + last_added+ '</th></tr>');
-    }
+      }
 
     }
 /**Add items to Inventory ends here**/
@@ -1627,14 +1639,6 @@ function add_itemToInv_BagPieces_data(itemcode, bag, piece,today) {
 function returnCustDetails(){
   var custnumber = $("#customerMobileNumber").val();
   console.log(custnumber+" custnumber");
-  /*database.ref('customers').on('child_added', function(data) {
-    console.log(data.val());
-    if(data.val().phonenumber == custnumber){
-      $('#customerName').html(data.val().customername);
-        $('#customerPhoneNumber').html(data.val().phonenumber);
-        $('#customerAddress').html(data.val().address);
-    }
-  });*/
   database.ref('customers/'+custnumber).once("value").then(function(data) {
     $('#customerName').html(data.val().customername);
     $('#customerEmailID').html(data.val().email);
@@ -1653,3 +1657,895 @@ function printDiv(divName) {
      document.body.innerHTML = originalContents;
 }
 /** print area ends**/
+/*Purchase order logic starts here*/
+$("#btnAddPurchaseOrder").click(function() {
+  switch (currentunitconfig) {
+    case "Case-Box-Piece":
+      //add_itemToInv_CaseBoxPiece_data($("#itemcode").val(), $("#case").val(), $("#box").val(), $("#piece").val());
+      itemcodeadd=$("#itemcode").val();
+      var caseunit=$("#case").val();
+      var box=$("#box").val();
+      var piece=$("#piece").val();
+      var today=$("#today").val();
+        database.ref('purchaseorder/'+itemcodeadd).once("value").then(function(snapshot) {
+          if(isNaN(snapshot.val().case)){
+            caseunitadd="0";
+            }
+          else{
+          caseunitadd = snapshot.val().case;
+          }
+
+            if(isNaN(snapshot.val().box)){
+          boxadd="0";
+        }
+        else{
+
+          boxadd = snapshot.val().box;
+        }
+            if(isNaN(snapshot.val().piece)){
+          pieceadd="0";
+        }
+        else{
+
+          pieceadd = snapshot.val().piece;
+        }
+        if(isNaN(snapshot.val().totalorderedcase)){
+          totalorderedcaseunitadd="0";
+          }
+        else{
+        totalorderedcaseunitadd = snapshot.val().totalorderedcase;
+        }
+
+          if(isNaN(snapshot.val().totalorderedbox)){
+        totalorderedboxadd="0";
+      }
+      else{
+
+        totalorderedboxadd = snapshot.val().totalorderedbox;
+      }
+          if(isNaN(snapshot.val().totalorderedpiece)){
+        totalorderedpieceadd="0";
+      }
+      else{
+
+        totalorderedpieceadd = snapshot.val().totalorderedpiece;
+      }
+
+
+          caseunitadd = parseInt(caseunitadd);
+          boxadd = parseInt(boxadd);
+          pieceadd = parseInt(pieceadd);
+          totalorderedcaseunitadd = parseInt(totalorderedcaseunitadd);
+          totalorderedboxadd = parseInt(totalorderedboxadd);
+          totalorderedpieceadd = parseInt(totalorderedpieceadd);
+          if($("#deliverySatus").val() == "Delivered"){
+            caseunitadd = caseunitadd-parseInt(caseunit);
+            pieceadd = pieceadd-parseInt(piece);
+            boxadd = boxadd-parseInt(box);
+          }
+          else if($("#deliverySatus").val() == "To-be-Delivered"){
+            caseunitadd = caseunitadd+parseInt(caseunit);
+            pieceadd = pieceadd+parseInt(piece);
+            boxadd = boxadd+parseInt(box);
+            totalorderedcaseunitadd = totalorderedcaseunitadd+parseInt(caseunit);
+            totalorderedpieceadd = totalorderedpieceadd+parseInt(piece);
+            totalorderedboxadd = totalorderedboxadd+parseInt(box);
+          }
+          add_itemToPurchaseOrder_CaseBoxPiece_data(itemcodeadd,caseunitadd,boxadd,pieceadd,totalorderedcaseunitadd,totalorderedboxadd,totalorderedpieceadd,today);
+        });
+      break;
+    case "Case-Piece":
+      itemcodeadd=$("#itemcode").val();
+      var caseunit=$("#case").val();
+      var piece=$("#piece").val();
+      var today=$("#today").val();
+      database.ref('purchaseorder/'+itemcodeadd).once("value").then(function(snapshot) {
+        if(isNaN(snapshot.val().case)){
+          caseunitadd="0";
+          }
+        else{
+        caseunitadd = snapshot.val().case;
+        }
+          if(isNaN(snapshot.val().piece)){
+        pieceadd="0";
+        }
+        else{
+        pieceadd = snapshot.val().piece;
+        }
+        //to
+        if(isNaN(snapshot.val().totalorderedcase)){
+          totalorderedcaseunitadd="0";
+          }
+        else{
+        totalorderedcaseunitadd = snapshot.val().totalorderedcase;
+        }
+          if(isNaN(snapshot.val().totalorderedpiece)){
+        totalorderedpieceadd="0";
+        }
+        else{
+        totalorderedpieceadd = snapshot.val().totalorderedpiece;
+        }
+        caseunitadd = parseInt(caseunitadd);
+        pieceadd = parseInt(pieceadd);
+        totalorderedcaseunitadd = parseInt(caseunitadd);
+        totalorderedpieceadd = parseInt(pieceadd);
+        if($("#deliverySatus").val() == "Delivered"){
+        caseunitadd = caseunitadd-parseInt(caseunit);
+        pieceadd = pieceadd-parseInt(piece);
+        }
+        else if($("#deliverySatus").val() == "To-be-Delivered"){
+          caseunitadd = caseunitadd+parseInt(caseunit);
+          pieceadd = pieceadd+parseInt(piece);
+          totalorderedcaseunitadd = totalorderedcaseunitadd+parseInt(caseunit);
+          totalorderedpieceadd = totalorderedpieceadd+parseInt(piece);
+        }
+        add_itemToPurchaseOrder_CasePiece_data(itemcodeadd,caseunitadd,pieceadd,totalorderedcaseunitadd,totalorderedpieceadd,today);
+        });
+
+      break;
+    case "Case-Packets":
+      //add_itemToInv_CasePackets_data($("#itemcode").val(), $("#case").val(),$("#packets").val());
+      itemcodeadd=$("#itemcode").val();
+      var caseunit=$("#case").val();
+      var packets=$("#packets").val();
+      var today=$("#today").val();
+        database.ref('purchaseorder/'+itemcodeadd).once("value").then(function(snapshot) {
+          if(isNaN(snapshot.val().case)){
+            caseunitadd="0";
+            }
+          else{
+          caseunitadd = snapshot.val().case;
+          }
+            if(isNaN(snapshot.val().packets)){
+          packetsadd="0";
+        }
+        else{
+          packetsadd = snapshot.val().packets;
+        }
+        if(isNaN(snapshot.val().totalorderedcase)){
+          totalorderedcaseunitadd="0";
+          }
+        else{
+        totalorderedcaseunitadd = snapshot.val().totalorderedcase;
+        }
+          if(isNaN(snapshot.val().totalorderedpackets)){
+        totalorderedpacketsadd="0";
+      }
+      else{
+        totalorderedpacketsadd = snapshot.val().totalorderedpackets;
+      }
+          caseunitadd = parseInt(caseunitadd);
+          packetsadd = parseInt(packetsadd);
+          totalorderedcaseunitadd = parseInt(totalorderedcaseunitadd);
+          totalorderedpacketsadd = parseInt(totalorderedpacketsadd);
+          if($("#deliverySatus").val() == "Delivered"){
+            caseunitadd = caseunitadd-parseInt(caseunit);
+            packetsadd = packetsadd-parseInt(packets);
+          }
+          else if($("#deliverySatus").val() == "To-be-Delivered"){
+            caseunitadd = caseunitadd+parseInt(caseunit);
+            packetsadd = packetsadd+parseInt(packets);
+            totalorderedcaseunitadd = totalorderedcaseunitadd+parseInt(caseunit);
+            totalorderedpacketsadd = totalorderedpacketsadd+parseInt(packets);
+          }
+
+          add_itemToPurchaseOrder_CasePackets_data(itemcodeadd,caseunitadd,packetsadd,totalorderedcaseunitadd,totalorderedpacketsadd,today);
+        });
+      break;
+    case "Case-Tin":
+      //add_itemToInv_CaseTin_data($("#itemcode").val(), $("#case").val(),$("#tin").val());
+      //Get item code
+      itemcodeadd=$("#itemcode").val();
+      //get units from input boxes
+      var caseunit=$("#case").val();
+      var tin=$("#tin").val();
+      //Get date from input
+      var today=$("#today").val();
+        database.ref('purchaseorder/'+itemcodeadd).once("value").then(function(snapshot) {
+          if(isNaN(snapshot.val().case)){
+            caseunitadd="0";
+            }
+          else{
+          caseunitadd = snapshot.val().case;
+          }
+          if(isNaN(snapshot.val().tin)){
+          tinadd="0";
+        }
+        else{
+          tinadd = snapshot.val().tin;
+        }
+        if(isNaN(snapshot.val().totalorderedcase)){
+          totalorderedcaseunitadd="0";
+          }
+        else{
+        totalorderedcaseunitadd = snapshot.val().totalorderedcase;
+        }
+        if(isNaN(snapshot.val().totalorderedtin)){
+        totalorderedtinadd="0";
+      }
+      else{
+        totalorderedtinadd = snapshot.val().totalorderedtin;
+      }
+        //Convert input to int
+          caseunitadd = parseInt(caseunitadd);
+          tinadd = parseInt(tinadd);
+          totalorderedcaseunitadd = parseInt(totalorderedcaseunitadd);
+          totalorderedtinadd = parseInt(totalorderedtinadd);
+          //Add inputs value db value
+          if($("#deliverySatus").val() == "Delivered"){
+            caseunitadd = caseunitadd-parseInt(caseunit);
+            tinadd = tinadd-parseInt(tin);
+          }
+          else if($("#deliverySatus").val() == "To-be-Delivered"){
+            caseunitadd = caseunitadd+parseInt(caseunit);
+            tinadd = tinadd+parseInt(tin);
+            totalorderedcaseunitadd = totalorderedcaseunitadd+parseInt(caseunit);
+            totalorderedtinadd = totalorderedtinadd+parseInt(tin);
+          }
+
+          add_itemToPurchaseOrder_CaseTin_data(itemcodeadd,caseunitadd,tinadd,totalorderedcaseunitadd,totalorderedtinadd,today);
+        });
+      break;
+    case "Bundle-Katta-Boxes":
+      //add_itemToInv_BundleKattaBox_data($("#itemcode").val(), $("#bundle").val(), $("#katta").val(), $("#box").val());
+      itemcodeadd=$("#itemcode").val();
+      var bundle=$("#bundle").val();
+      var box=$("#box").val();
+      var katta=$("#katta").val();
+      var today=$("#today").val();
+        database.ref('purchaseorder/'+itemcodeadd).once("value").then(function(snapshot) {
+
+          if(isNaN(snapshot.val().bundle)){
+            bundleadd="0";
+            }
+          else{
+          bundleadd = snapshot.val().bundle;
+          }
+
+            if(isNaN(snapshot.val().box)){
+          boxadd="0";
+        }
+        else{
+
+          boxadd = snapshot.val().box;
+        }
+            if(isNaN(snapshot.val().katta)){
+          kattaadd="0";
+        }
+        else{
+          kattaadd = snapshot.val().katta;
+        }//to
+        if(isNaN(snapshot.val().totalorderedbundle)){
+          totalorderedbundleadd="0";
+          }
+        else{
+        totalorderedbundleadd = snapshot.val().totalorderedbundle;
+        }
+
+          if(isNaN(snapshot.val().totalorderedbox)){
+        totalorderedboxadd="0";
+      }
+      else{
+
+        totalorderedboxadd = snapshot.val().totalorderedbox;
+      }
+          if(isNaN(snapshot.val().totalorderedkatta)){
+        totalorderedkattaadd="0";
+      }
+      else{
+        totalorderedkattaadd = snapshot.val().totalorderedkatta;
+      }
+
+          bundleadd = parseInt(bundleadd);
+          boxadd = parseInt(boxadd);
+          kattaadd = parseInt(kattaadd);
+          totalorderedbundleadd = parseInt(totalorderedbundleadd);
+          totalorderedboxadd = parseInt(totalorderedboxadd);
+          totalorderedkattaadd = parseInt(totalorderedkattaadd);
+          //
+
+          //
+          if($("#deliverySatus").val() == "Delivered"){
+            bundleadd = bundleadd-parseInt(bundle);
+            kattaadd = kattaadd-parseInt(katta);
+            boxadd = boxadd-parseInt(box);
+          }
+          else if($("#deliverySatus").val() == "To-be-Delivered"){
+            bundleadd = bundleadd+parseInt(bundle);
+            kattaadd = kattaadd+parseInt(katta);
+            boxadd = boxadd+parseInt(box);
+            totalorderedbundleadd = totalorderedbundleadd+parseInt(bundle);
+            totalorderedkattaadd = totalorderedkattaadd+parseInt(katta);
+            totalorderedboxadd = totalorderedboxadd+parseInt(box);
+          }
+          add_itemToPurchaseOrder_BundleKattaBox_data(itemcodeadd,bundleadd,kattaadd,boxadd,totalorderedbundleadd,totalorderedkattaadd,totalorderedboxadd,today);
+        });
+      break;
+    case "Bundle-Boxes":
+      //add_itemToInv_BundleBox_data($("#itemcode").val(), $("#bundle").val(),$("#box").val());
+      itemcodeadd=$("#itemcode").val();
+      var bundle=$("#bundle").val();
+      var box=$("#box").val();
+      var today=$("#today").val();
+        database.ref('purchaseorder/'+itemcodeadd).once("value").then(function(snapshot) {
+          if(isNaN(snapshot.val().bundle)){
+            bundleadd="0";
+            }
+          else{
+          bundleadd = snapshot.val().bundle;
+          }
+            if(isNaN(snapshot.val().box)){
+          boxadd="0";
+        }
+        else{
+          boxadd = snapshot.val().box;
+        }
+        if(isNaN(snapshot.val().totalorderedbundle)){
+          totalorderedbundleadd="0";
+          }
+        else{
+        totalorderedbundleadd = snapshot.val().totalorderedbundle;
+        }
+          if(isNaN(snapshot.val().totalorderedbox)){
+        totalorderedboxadd="0";
+      }
+      else{
+        totalorderedboxadd = snapshot.val().totalorderedbox;
+      }
+          bundleadd = parseInt(bundleadd);
+          boxadd = parseInt(boxadd);
+          totalorderedbundleadd = parseInt(totalorderedbundleadd);
+          totalorderedboxadd = parseInt(totalorderedboxadd);
+          //
+
+          //
+          if($("#deliverySatus").val() == "Delivered"){
+            bundleadd = bundleadd-parseInt(bundle);
+            boxadd = boxadd-parseInt(box);
+          }
+          else if($("#deliverySatus").val() == "To-be-Delivered"){
+            bundleadd = bundleadd+parseInt(bundle);
+            boxadd = boxadd+parseInt(box);
+            totalorderedbundleadd = totalorderedbundleadd+parseInt(bundle);
+            totalorderedboxadd = totalorderedboxadd+parseInt(box);
+          }
+          add_itemToPurchaseOrder_BundleBox_data(itemcodeadd,bundleadd,boxadd,totalorderedbundleadd,totalorderedboxadd,today);
+        });
+      break;
+    case "Bag-Kgs":
+      //add_itemToInv_BagKgs_data($("#itemcode").val(), $("#bag").val(),$("#kgs").val());
+      //Get item code
+      itemcodeadd=$("#itemcode").val();
+      //get units from input boxes
+      var bag=$("#bag").val();
+      var kgs=$("#kgs").val();
+      //Get date from input
+      var today=$("#today").val();
+        database.ref('purchaseorder/'+itemcodeadd).once("value").then(function(snapshot) {
+          if(isNaN(snapshot.val().bag)){
+            bagadd="0";
+            }
+          else{
+          bagadd = snapshot.val().bag;
+          }
+          if(isNaN(snapshot.val().kgs)){
+          kgsadd="0";
+        }
+        else{
+          kgsadd = snapshot.val().kgs;
+        }
+        if(isNaN(snapshot.val().totalorderedbag)){
+          totalorderedbagadd="0";
+          }
+        else{
+        totalorderedbagadd = snapshot.val().totalorderedbag;
+        }
+        if(isNaN(snapshot.val().totalorderedkgs)){
+        totalorderedkgsadd="0";
+      }
+      else{
+        totalorderedkgsadd = snapshot.val().totalorderedkgs;
+      }
+        //Convert input to int
+          bagadd = parseInt(bagadd);
+          kgsadd = parseInt(kgsadd);
+          totalorderedbagadd = parseInt(totalorderedbagadd);
+          totalorderedkgsadd = parseInt(totalorderedkgsadd);
+          //Add inputs value db value
+
+          if($("#deliverySatus").val() == "Delivered"){
+            bagadd = bagadd-parseInt(bag);
+            kgsadd = kgsadd-parseInt(kgs);
+          }
+          else if($("#deliverySatus").val() == "To-be-Delivered"){
+            bagadd = bagadd+parseInt(bag);
+            kgsadd = kgsadd+parseInt(kgs);
+            totalorderedbagadd = totalorderedbagadd+parseInt(bag);
+            totalorderedkgsadd = totalorderedkgsadd+parseInt(kgs);
+          }
+          add_itemToPurchaseOrder_BagKgs_data(itemcodeadd,bagadd,kgsadd,totalorderedbagadd,totalorderedkgsadd,today);
+        });
+      break;
+    case "Case-Cent-Katta":
+      //  add_itemToInv_CaseCentKatta_data($("#itemcode").val(), $("#case").val(), $("#cent").val(), $("#katta").val());
+      itemcodeadd=$("#itemcode").val();
+      var caseunit=$("#case").val();
+      var cent=$("#cent").val();
+      var katta=$("#katta").val();
+      var today=$("#today").val();
+        database.ref('purchaseorder/'+itemcodeadd).once("value").then(function(snapshot) {
+
+          if(isNaN(snapshot.val().case)){
+            caseunitadd="0";
+            }
+          else{
+          caseunitadd = snapshot.val().case;
+          }
+            if(isNaN(snapshot.val().cent)){
+          centadd="0";
+        }
+        else{
+
+          centadd = snapshot.val().cent;
+        }
+            if(isNaN(snapshot.val().katta)){
+          kattaadd="0";
+        }
+        else{
+          kattaadd = snapshot.val().katta;
+        }
+        //
+        if(isNaN(snapshot.val().totalorderedcase)){
+          totalorderedcaseunitadd="0";
+          }
+        else{
+        totalorderedcaseunitadd = snapshot.val().totalorderedcase;
+        }
+          if(isNaN(snapshot.val().totalorderedcent)){
+        totalorderedcentadd="0";
+      }
+      else{
+
+        totalorderedcentadd = snapshot.val().totalorderedcent;
+      }
+          if(isNaN(snapshot.val().totalorderedkatta)){
+        totalorderedkattaadd="0";
+      }
+      else{
+        totalorderedkattaadd = snapshot.val().totalorderedkatta;
+      }
+
+          caseunitadd = parseInt(caseunitadd);
+          centadd = parseInt(centadd);
+          kattaadd = parseInt(kattaadd);
+          totalorderedcaseunitadd = parseInt(totalorderedcaseunitadd);
+          totalorderedcentadd = parseInt(totalorderedcentadd);
+          totalorderedkattaadd = parseInt(totalorderedkattaadd);
+          //
+
+          if($("#deliverySatus").val() == "Delivered"){
+            caseunitadd = caseunitadd-parseInt(caseunit);
+            centadd = centadd-parseInt(cent);
+            kattaadd = kattaadd-parseInt(katta);
+          }
+          else if($("#deliverySatus").val() == "To-be-Delivered"){
+            caseunitadd = caseunitadd+parseInt(caseunit);
+            centadd = centadd+parseInt(cent);
+            kattaadd = kattaadd+parseInt(katta);
+            totalorderedcaseunitadd = totalorderedcaseunitadd+parseInt(caseunit);
+            totalorderedcentadd = totalorderedcentadd+parseInt(cent);
+            totalorderedkattaadd = totalorderedkattaadd+parseInt(katta);
+          }
+          add_itemToPurchaseOrder_CaseCentKatta_data(itemcodeadd,caseunitadd,centadd,kattaadd,totalorderedcaseunitadd,totalorderedcentadd,totalorderedkattaadd,today);
+        });
+      break;
+      //Verified upto here
+    case "Case-Tube":
+      //add_itemToInv_CaseTube_data($("#itemcode").val(), $("#case").val(),$("#tube").val());
+      //Get item code
+      itemcodeadd=$("#itemcode").val();
+      //get units from input boxes
+      var caseunit=$("#case").val();
+      var tube=$("#tube").val();
+      //Get date from input
+      var today=$("#today").val();
+        database.ref('purchaseorder/'+itemcodeadd).once("value").then(function(snapshot) {
+          if(isNaN(snapshot.val().case)){
+            caseunitadd="0";
+            }
+          else{
+          caseunitadd = snapshot.val().case;
+          }
+          if(isNaN(snapshot.val().tube)){
+          tubeadd="0";
+        }
+        else{
+          tubeadd = snapshot.val().tube;
+        }
+        //
+        if(isNaN(snapshot.val().totalorderedcase)){
+          totalorderedcaseunitadd="0";
+          }
+        else{
+        totalorderedcaseunitadd = snapshot.val().totalorderedcase;
+        }
+        if(isNaN(snapshot.val().totalorderedtube)){
+        totalorderedtubeadd="0";
+      }
+      else{
+        totalorderedtubeadd = snapshot.val().totalorderedtube;
+      }
+        //Convert input to int
+          caseunitadd = parseInt(caseunitadd);
+          tubeadd = parseInt(tubeadd);
+          totalorderedcaseunitadd = parseInt(totalorderedcaseunitadd);
+          totalorderedtubeadd = parseInt(totalorderedtubeadd);
+          //Add inputs value db value
+
+          if($("#deliverySatus").val() == "Delivered"){
+            caseunitadd = caseunitadd-parseInt(caseunit);
+            tubeadd = tubeadd-parseInt(tube);
+          }
+          else if($("#deliverySatus").val() == "To-be-Delivered"){
+            caseunitadd = caseunitadd+parseInt(caseunit);
+            tubeadd = tubeadd+parseInt(tube);
+            totalorderedcaseunitadd = totalorderedcaseunitadd+parseInt(caseunit);
+            totalorderedtubeadd = totalorderedtubeadd+parseInt(tube);
+          }
+          add_itemToPurchaseOrder_CaseTube_data(itemcodeadd,caseunitadd,tubeadd,totalorderedcaseunitadd,totalorderedtubeadd,today);
+        });
+      break;
+    case "Case-Cone":
+      //add_itemToInv_CaseCone_data($("#itemcode").val(), $("#case").val(),$("#cone").val());
+      //Get item code
+      itemcodeadd=$("#itemcode").val();
+      //get units from input boxes
+      var caseunit=$("#case").val();
+      var cone=$("#cone").val();
+      //Get date from input
+      var today=$("#today").val();
+        database.ref('purchaseorder/'+itemcodeadd).once("value").then(function(snapshot) {
+          if(isNaN(snapshot.val().case)){
+            caseunitadd="0";
+            }
+          else{
+          caseunitadd = snapshot.val().case;
+          }
+          if(isNaN(snapshot.val().cone)){
+          coneadd="0";
+        }
+        else{
+          coneadd = snapshot.val().cone;
+        }
+        //
+        if(isNaN(snapshot.val().totalorderedcase)){
+          totalorderedcaseunitadd="0";
+          }
+        else{
+        totalorderedcaseunitadd = snapshot.val().totalorderedcase;
+        }
+        if(isNaN(snapshot.val().totalorderedcone)){
+        totalorderedconeadd="0";
+      }
+      else{
+        totalorderedconeadd = snapshot.val().totalorderedcone;
+      }
+        //Convert input to int
+          caseunitadd = parseInt(caseunitadd);
+          coneadd = parseInt(coneadd);
+          totalorderedcaseunitadd = parseInt(totalorderedcaseunitadd);
+          totalorderedconeadd = parseInt(totalorderedconeadd);
+          if($("#deliverySatus").val() == "Delivered"){
+            caseunitadd = caseunitadd-parseInt(caseunit);
+            coneadd = coneadd-parseInt(cone);
+          }
+          else if($("#deliverySatus").val() == "To-be-Delivered"){
+            caseunitadd = caseunitadd+parseInt(caseunit);
+            coneadd = coneadd+parseInt(cone);
+            totalorderedcaseunitadd = totalorderedcaseunitadd+parseInt(caseunit);
+            totalorderedconeadd = totalorderedconeadd+parseInt(cone);
+          }
+          //Add inputs value db value
+
+          add_itemToPurchaseOrder_CaseCone_data(itemcodeadd,caseunitadd,coneadd,totalorderedcaseunitadd,totalorderedconeadd,today);
+        });
+      break;
+    case "Bag-Packets":
+      //add_itemToInv_BagPackets_data($("#itemcode").val(), $("#bag").val(),$("#packets").val());
+      //Get item code
+      itemcodeadd=$("#itemcode").val();
+      //get units from input boxes
+      var bag=$("#bag").val();
+      var packets=$("#packets").val();
+      //Get date from input
+      var today=$("#today").val();
+        database.ref('purchaseorder/'+itemcodeadd).once("value").then(function(snapshot) {
+          if(isNaN(snapshot.val().bag)){
+            bagadd="0";
+            }
+          else{
+          bagadd = snapshot.val().bag;
+          }
+          if(isNaN(snapshot.val().packets)){
+          packetsadd="0";
+        }
+        else{
+          packetsadd = snapshot.val().packets;
+        }
+        if(isNaN(snapshot.val().totalorderedbag)){
+          totalorderedbagadd="0";
+          }
+        else{
+        totalorderedbagadd = snapshot.val().totalorderedbag;
+        }
+        if(isNaN(snapshot.val().totalorderedpackets)){
+        totalorderedpacketsadd="0";
+      }
+      else{
+        totalorderedpacketsadd = snapshot.val().totalorderedpackets;
+      }
+        //Convert input to int
+          bagadd = parseInt(bagadd);
+          packetsadd = parseInt(packetsadd);
+          totalorderedbagadd = parseInt(totalorderedbagadd);
+          totalorderedpacketsadd = parseInt(totalorderedpacketsadd);
+          //Add inputs value db value
+
+          if($("#deliverySatus").val() == "Delivered"){
+            bagadd = bagadd-parseInt(bag);
+            packetsadd = packetsadd-parseInt(packets);
+          }
+          else if($("#deliverySatus").val() == "To-be-Delivered"){
+            bagadd = bagadd+parseInt(bag);
+            packetsadd = packetsadd+parseInt(packets);
+            totalorderedbagadd = totalorderedbagadd+parseInt(bag);
+            totalorderedpacketsadd = totalorderedpacketsadd+parseInt(packets);
+          }
+          add_itemToPurchaseOrder_BagPackets_data(itemcodeadd,bagadd,packetsadd,totalorderedbagadd,totalorderedpacketsadd,today);
+        });
+      break;
+    case "Bag-Pieces":
+      //add_itemToInv_BagPieces_data($("#itemcode").val(), $("#bag").val(),$("#piece").val());
+      //Get item code
+      itemcodeadd=$("#itemcode").val();
+      //get units from input boxes
+      var bag=$("#bag").val();
+      var piece=$("#piece").val();
+      //Get date from input
+      var today=$("#today").val();
+        database.ref('purchaseorder/'+itemcodeadd).once("value").then(function(snapshot) {
+          if(isNaN(snapshot.val().bag)){
+            bagadd="0";
+            }
+          else{
+          bagadd = snapshot.val().bag;
+          }
+          if(isNaN(snapshot.val().piece)){
+          pieceadd="0";
+        }
+        else{
+          pieceadd = snapshot.val().piece;
+        }
+        //
+        if(isNaN(snapshot.val().totalorderedbag)){
+          totalorderedbagadd="0";
+          }
+        else{
+        totalorderedbagadd = snapshot.val().totalorderedbag;
+        }
+        if(isNaN(snapshot.val().totalorderedpiece)){
+        totalorderedpieceadd="0";
+      }
+      else{
+        totalorderedpieceadd = snapshot.val().totalorderedpiece;
+      }
+        //Convert input to int
+          bagadd = parseInt(bagadd);
+          pieceadd = parseInt(pieceadd);
+          totalorderedbagadd = parseInt(totalorderedbagadd);
+          totalorderedpieceadd = parseInt(totalorderedpieceadd);
+          //Add inputs value db value
+
+          if($("#deliverySatus").val() == "Delivered"){
+            bagadd = bagadd-parseInt(bag);
+            pieceadd = pieceadd-parseInt(piece);
+          }
+          else if($("#deliverySatus").val() == "To-be-Delivered"){
+            bagadd = bagadd+parseInt(bag);
+            pieceadd = pieceadd+parseInt(piece);
+            totalorderedbagadd = totalorderedbagadd+parseInt(bag);
+            totalorderedpieceadd = totalorderedpieceadd+parseInt(piece);
+          }
+          add_itemToPurchaseOrder_BagPieces_data(itemcodeadd,bagadd,pieceadd,totalorderedbagadd,totalorderedpieceadd,today);
+        });
+
+      break;
+    default:
+      console.log("No package found");
+  }
+
+});
+function add_itemToPurchaseOrder_CaseBoxPiece_data(itemcode, caseunit, box, piece,totalcaseunit, totalbox, totalpiece,today) {
+  database.ref('purchaseorder/' + itemcode).update({itemcode: itemcode, case: caseunit, box: box, piece: piece, last_added:today,totalorderedcase:totalcaseunit,totalorderedbox:totalbox,totalorderedpiece:totalpiece});
+}
+function add_itemToPurchaseOrder_CasePiece_data(itemcode, caseunit, piece,totalcaseunit, totalpiece,today) {
+  database.ref('purchaseorder/' + itemcode).update({itemcode: itemcode, case: caseunit, piece: piece, last_added:today,totalorderedcase: totalcaseunit, totalorderedpiece: totalpiece});
+}
+function add_itemToPurchaseOrder_CasePackets_data(itemcode, caseunit, packets,totalcaseunit, totalpackets,today) {
+  database.ref('purchaseorder/' + itemcode).update({itemcode: itemcode, case: caseunit, packets: packets, last_added:today, totalorderedcase: totalcaseunit, totalorderedpackets: totalpackets});
+}
+function add_itemToPurchaseOrder_CaseTin_data(itemcode, caseunit, tin, totalcaseunit, totaltin,today) {
+  database.ref('purchaseorder/' + itemcode).update({itemcode: itemcode, case: caseunit, tin: tin, last_added:today,totalorderedcase: totalcaseunit, totalorderedtin: totaltin});
+}
+function add_itemToPurchaseOrder_BundleKattaBox_data(itemcode, bundle, katta, box,totalbundle, totalkatta, totalbox,today) {
+  database.ref('purchaseorder/' + itemcode).update({itemcode: itemcode, bundle: bundle, katta: katta, box: box, last_added:today,totalorderedbundle: totalbundle, totalorderedkatta: totalkatta, totalorderedbox: totalbox});
+}
+function add_itemToPurchaseOrder_BundleBox_data(itemcode, bundle, box,totalbundle, totalbox,today) {
+  database.ref('purchaseorder/' + itemcode).update({itemcode: itemcode, bundle: bundle, box: box, last_added:today,totalorderedbundle: totalbundle, totalorderedbox: totalbox});
+}
+function add_itemToPurchaseOrder_BagKgs_data(itemcode, bundle, kgs,totalbundle, totalkgs,today) {
+  database.ref('purchaseorder/' + itemcode).update({itemcode: itemcode, bag: bag, kgs: kgs, last_added:today,totalorderedbag: totalbag, totalorderedkgs: totalkgs});
+}
+function add_itemToPurchaseOrder_CaseCentKatta_data(itemcode, caseunit, cent, katta,totalcaseunit, totalcent, totalkatta,today) {
+  database.ref('purchaseorder/' + itemcode).update({itemcode: itemcode, case: caseunit,cent: cent ,katta: katta, last_added:today, totalorderedcase: totalcaseunit,totalorderedcent: totalcent, totalorderedkatta: totalkatta});
+}
+function add_itemToPurchaseOrder_CaseTube_data(itemcode, caseunit, tube,totalcaseunit, totaltube,today) {
+  database.ref('purchaseorder/' + itemcode).update({itemcode: itemcode, case: caseunit, tube: tube, last_added:today,totalorderedcase: totalcaseunit, totalorderedtube: totaltube});
+}
+function add_itemToPurchaseOrder_CaseCone_data(itemcode, caseunit, cone,totalcaseunit, totalcone,today) {
+  database.ref('purchaseorder/' + itemcode).update({itemcode: itemcode, case: caseunit, cone: cone, last_added:today,totalorderedcase: totalcaseunit, totalorderedcone: totalcone});
+}
+function add_itemToPurchaseOrder_BagPackets_data(itemcode, bag, packets,totalbag, totalpackets,today) {
+  database.ref('purchaseorder/' + itemcode).update({itemcode: itemcode, bag: bag, packets: packets, last_added:today,totalorderedbag: totalbag, totalorderedpackets: totalpackets});
+}
+function add_itemToPurchaseOrder_BagPieces_data(itemcode, bag, piece,totalbag, totalpiece,today) {
+  database.ref('purchaseorder/' + itemcode).update({itemcode: itemcode, bag: bag, piece: piece, last_added:today,totalorderedbag: totalbag, totalorderedpiece: totalpiece});
+}
+database.ref('purchaseorder').on('child_added', function(data) {
+  //add_categories_data_table(data.val().name, data.val().type);
+  switch (data.val().unit) {
+    case "Case-Box-Piece":
+      if (data.val().box != undefined) {
+        add_item_purchaseOrder_data_table(data.val().itemcode,data.val().name,"Case : "+data.val().case+" Box : "+data.val().box+" Piece : "+data.val().piece,"Case : "+data.val().totalorderedcase+" Box : "+data.val().totalorderedbox+" Piece : "+data.val().totalorderedpiece,data.val().last_added);
+      }
+      break;
+    case "Case-Piece":
+      if (data.val().piece != undefined) {
+        add_item_purchaseOrder_data_table(data.val().itemcode,data.val().name,"Case : "+data.val().case+" Piece : "+data.val().piece,"Case : "+data.val().totalorderedcase+" Piece : "+data.val().totalorderedpiece,data.val().last_added);
+        }
+      break;
+    case "Case-Packets":
+      if (data.val().packets != undefined) {
+        add_item_purchaseOrder_data_table(data.val().itemcode,data.val().name,"Case : "+data.val().case+" Packets : "+data.val().packets,"Case : "+data.val().totalorderedcase+" Packets : "+data.val().totalorderedpackets,data.val().last_added);
+    }
+      break;
+    case "Case-Tin":
+      if (data.val().tin != undefined) {
+        add_item_purchaseOrder_data_table(data.val().itemcode,data.val().name,"Case : "+data.val().case+" Tin : "+data.val().tin,"Case : "+data.val().totalorderedcase+" Tin : "+data.val().totalorderedtin,data.val().last_added);
+      }
+      break;
+    case "Bundle-Katta-Boxes":
+      if (data.val().box != undefined) {
+        add_item_purchaseOrder_data_table(data.val().itemcode,data.val().name,"Bundle : "+data.val().bundle+" Katta : "+data.val().katta+" Box : "+data.val().box,"Bundle : "+data.val().totalorderedbundle+" Katta : "+data.val().totalorderedkatta+" Box : "+data.val().totalorderedbox,data.val().last_added);
+      }
+      break;
+    case "Bundle-Boxes":
+      if (data.val().box != undefined) {
+        add_item_purchaseOrder_data_table(data.val().itemcode,data.val().name,"Bundle : "+data.val().bundle+" Box : "+data.val().box,"Bundle : "+data.val().totalorderedbundle+" Box : "+data.val().totalorderedbox,data.val().last_added);
+      }
+      break;
+    case "Bag-Kgs":
+      if (data.val().bag != undefined) {
+        add_item_purchaseOrder_data_table(data.val().itemcode,data.val().name,"Bag : "+data.val().bag+" Kgs : "+data.val().kgs,"Bag : "+data.val().totalorderedbag+" Kgs : "+data.val().totalorderedkgs,data.val().last_added);
+      }
+      break;
+    case "Case-Cent-Katta":
+      if (data.val().cent != undefined) {
+        add_item_purchaseOrder_data_table(data.val().itemcode,data.val().name,"Case : "+data.val().case+" Cent : "+data.val().cent+" Katta : "+data.val().katta,"Case : "+data.val().totalorderedcase+" Cent : "+data.val().totalorderedcent+" Katta : "+data.val().totalorderedkatta,data.val().last_added);
+      }
+      break;
+    case "Case-Tube":
+      if (data.val().tube != undefined) {
+        add_item_purchaseOrder_data_table(data.val().itemcode,data.val().name,"Case : "+data.val().case+" Tube : "+data.val().tube,"Case : "+data.val().totalorderedcase+" Tube : "+data.val().totalorderedtube,data.val().last_added);
+      }
+      break;
+    case "Case-Cone":
+      if (data.val().cone != undefined) {
+        add_item_purchaseOrder_data_table(data.val().itemcode,data.val().name,"Case : "+data.val().case+" Cone : "+data.val().cone,"Case : "+data.val().totalorderedcase+" Cone : "+data.val().totalorderedcone,data.val().last_added);
+      }
+      break;
+    case "Bag-Packets":
+      if (data.val().bag != undefined) {
+        add_item_purchaseOrder_data_table(data.val().itemcode,data.val().name,"Bag : "+data.val().bag+" Packets : "+data.val().packets,"Bag : "+data.val().totalorderedbag+" Packets : "+data.val().totalorderedpackets,data.val().last_added);
+      }
+      break;
+    case "Bag-Pieces":
+      if (data.val().bag != undefined) {
+        add_item_purchaseOrder_data_table(data.val().itemcode,data.val().name,"Bag : "+data.val().bag+" Piece : "+data.val().piece,"Bag : "+data.val().totalorderedbag+" Piece : "+data.val().totalorderedpiece,data.val().last_added);
+      }
+      break;
+    default:
+      console.log("No package found");
+  }
+});
+function add_item_purchaseOrder_data_table(itemcode,name,qty,totalqty,last_added){
+  $("#AddItemsPurchaseOrderTable").prepend('<tr id="' + itemcode + '"><th>' + itemcode + '</th><th>' + name + '</th><th>' + qty + '</th><th>' + totalqty + '</th><th>' + last_added+ '</th></tr>');
+}
+database.ref('purchaseorder').on('child_changed', function(data) {
+  switch (data.val().unit) {
+    case "Case-Box-Piece":
+      if (data.val().box != undefined) {
+        update_item_purchaseOrder_data_table(data.val().itemcode,data.val().name,"Case : "+data.val().case+" Box : "+data.val().box+" Piece : "+data.val().piece,"Case : "+data.val().totalorderedcase+" Box : "+data.val().totalorderedbox+" Piece : "+data.val().totalorderedpiece,data.val().last_added);
+      }
+      break;
+    case "Case-Piece":
+      if (data.val().piece != undefined) {
+        console.log("in if");
+        update_item_purchaseOrder_data_table(data.val().itemcode,data.val().name,"Case : "+data.val().case+" Piece : "+data.val().piece,"Case : "+data.val().totalorderedcase+" Piece : "+data.val().totalorderedpiece,data.val().last_added);
+      }
+      break;
+    case "Case-Packets":
+      if (data.val().packets != undefined) {
+        update_item_purchaseOrder_data_table(data.val().itemcode,data.val().name,"Case : "+data.val().case+" Packets : "+data.val().packets,"Case : "+data.val().totalorderedcase+" Packets : "+data.val().totalorderedpackets,data.val().last_added);
+      }
+      break;
+    case "Case-Tin":
+      if (data.val().tin != undefined) {
+        update_item_purchaseOrder_data_table(data.val().itemcode,data.val().name,"Case : "+data.val().case+" Tin : "+data.val().tin,"Case : "+data.val().totalorderedcase+" Tin : "+data.val().totalorderedtin,data.val().last_added);
+      }
+      break;
+    case "Bundle-Katta-Boxes":
+      if (data.val().box != undefined) {
+        update_item_purchaseOrder_data_table(data.val().itemcode,data.val().name,"Bundle : "+data.val().bundle+" Katta : "+data.val().katta+" Box : "+data.val().box,"Bundle : "+data.val().totalorderedbundle+" Katta : "+data.val().totalorderedkatta+" Box : "+data.val().totalorderedbox,data.val().last_added);
+      }
+      break;
+    case "Bundle-Boxes":
+      if (data.val().box != undefined) {
+        update_item_purchaseOrder_data_table(data.val().itemcode,data.val().name,"Bundle : "+data.val().bundle+" Box : "+data.val().box,"Bundle : "+data.val().totalorderedbundle+" Box : "+data.val().totalorderedbox,data.val().last_added);
+      }
+      break;
+    case "Bag-Kgs":
+      if (data.val().bag != undefined) {
+        update_item_purchaseOrder_data_table(data.val().itemcode,data.val().name,"Bag : "+data.val().bag+" Kgs : "+data.val().kgs,"Bag : "+data.val().totalorderedbag+" Kgs : "+data.val().totalorderedkgs,data.val().last_added);
+      }
+      break;
+    case "Case-Cent-Katta":
+      if (data.val().cent != undefined) {
+        update_item_purchaseOrder_data_table(data.val().itemcode,data.val().name,"Case : "+data.val().case+" Cent : "+data.val().cent+" Katta : "+data.val().katta,"Case : "+data.val().totalorderedcase+" Cent : "+data.val().totalorderedcent+" Katta : "+data.val().totalorderedkatta,data.val().last_added);
+      }
+      break;
+    case "Case-Tube":
+      if (data.val().tube != undefined) {
+        update_item_purchaseOrder_data_table(data.val().itemcode,data.val().name,"Case : "+data.val().case+" Tube : "+data.val().tube,"Case : "+data.val().totalorderedcase+" Tube : "+data.val().totalorderedtube,data.val().last_added);
+      break;
+    }
+    case "Case-Cone":
+      if (data.val().cone != undefined) {
+        update_item_purchaseOrder_data_table(data.val().itemcode,data.val().name,"Case : "+data.val().case+" Cone : "+data.val().cone,"Case : "+data.val().totalorderedcase+" Cone : "+data.val().totalorderedcone,data.val().last_added);
+      }
+      break;
+    case "Bag-Packets":
+      if (data.val().bag != undefined) {
+        update_item_purchaseOrder_data_table(data.val().itemcode,data.val().name,"Bag : "+data.val().bag+" Packets : "+data.val().packets,"Bag : "+data.val().totalorderedbag+" Packets : "+data.val().totalorderedpackets,data.val().last_added);
+      }
+      break;
+    case "Bag-Pieces":
+      if (data.val().bag != undefined) {
+        update_item_purchaseOrder_data_table(data.val().itemcode,data.val().name,"Bag : "+data.val().bag+" Piece : "+data.val().piece,"Bag : "+data.val().totalorderedbag+" Piece : "+data.val().totalorderedpiece,data.val().last_added);
+      }
+      break;
+    default:
+      console.log("No package found");
+  }
+});
+function update_item_purchaseOrder_data_table(itemcode,name,qty,totalqty,last_added){
+  var existence = document.getElementById(itemcode);
+  if(existence){
+    $("#AddItemsPurchaseOrderTable #" + itemcode).html('<th>' + itemcode + '</th><th>' + name + '</th><th>' + qty + '</th><th>' + totalqty + '</th><th>' + last_added+ '</th>');
+  }
+  else{
+  $("#AddItemsPurchaseOrderTable").prepend('<tr id="' + itemcode + '"><th>' + itemcode + '</th><th>' + name + '</th><th>' + qty + '</th><th>' + totalqty + '</th><th>' + last_added+ '</th></tr>');
+  }
+
+}
+/*Purchase order logic ends here*/
