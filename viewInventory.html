@@ -1,0 +1,143 @@
+<html>
+
+<head>
+  <title>View Inventory</title>
+  <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
+  <link rel="stylesheet" href="style.css" />
+  <script src="sorttable.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+  <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/all.js"></script>
+</head>
+
+<body background="crack.jpg" onload="loaddata()">
+
+  <div id="login_div" class="main-div col-lg-4">
+    <h3>Fireworks Login</h3>
+    <input type="email" placeholder="Email here" id="email_field" />
+    <input type="password" placeholder="Password here" id="password_field" />
+
+    <button onclick="login()">Login to Account</button>
+  </div>
+
+  <div id="user_div" class="loggedin-div">
+
+
+
+    <div id="wrapper">
+      <!-- Top Nav -->
+      <div id='cssmenu' class="navbar-fixed-top">
+        <ul>
+          <li><a href='customer.html'><span>Customer</span></a></li>
+          <li><a href='seller.html'><span>Seller</span></a></li>
+          <li><a href='AddCategoriesSubCategories.html'><span>Categories</span></a></li>
+          <li class='active has-sub'><a href='#'><span>Inventory</span></a>
+            <ul>
+              <li><a href='AddProduct.html'><span>Add Product</span></a></li>
+              <li><a href='configureProduct.html'><span>Product Configuration</span></a></li>
+              <li><a href='AddQtyToProduct.html'><span>Add Product to Inventory</span></a></li>
+              <li><a href='viewInventory.html'><span>View Inventory & Purchase Order</span></a></li>
+            </ul>
+          </li>
+          <li><a href='purchaseorder.html'><span>Purchase Order</span></a></li>
+          <li class='active has-sub'><a href='#'><span>Bill </span></a>
+            <ul>
+              <li><a href='estimatebill.html'><span>Estimate</span></a></li>
+              <li><a href='taxinvoicebill.html'><span>Tax Invoice</span></a></li>
+            </ul>
+            <li><a href='pricelist.html'><span>Price List</span></a></li>
+          </li>
+          <li class='last btn-danger'><a onclick="logout()"><span>Logout</span></a></li>
+        </ul>
+      </div>
+      <!-- Top Nav ends -->
+
+      <!-- Page Content -->
+      <div id="page-content-wrapper" style="padding-top:30px;">
+        <div class="container-fluid">
+          <div class="row">
+            <div class="col-lg-12">
+
+              <!--dummy -->
+              <div id="page-content-wrapper">
+                <div class="container-fluid">
+                  <div class="row">
+                    <div class="col-lg-12">
+
+                      <div class="container">
+                        <h1 class="title">
+                                            View Inventory
+                                          </h1>
+
+                      </div>
+                      <div class="inputs">
+                        <!--<select id="viewFilter">
+                          <option value="Company">Company</option>
+                          <option value="Company-Category">Company-Category</option>
+                          <option value="Company-Category-SubCategory">Company-Category-SubCategory</option>
+                          <option value="Category-SubCategory">Category-SubCategory</option>
+                        </select>-->
+                        Company: <input type="checkbox" id="companyCheckbox" onclick="showCompanyInput()"/>
+                        Category: <input type="checkbox" id="categoryCheckbox" onclick="showCategoryInput()"/>
+                        Sub-Category: <input type="checkbox" id="subCategoryCheckbox" onclick="showSubCategoryInput()"/>
+                        <div id="companyDIV"  style="display:none;">Company Name : <input id="companynameInput" type="text" name="companyname" placeholder="Company Name"/></div>
+                        <div id="categoryDIV" style="display:none;">Category : <input id="categoriesInput" type="text" name="categories" placeholder="Categories"/></div>
+                        <div id="subCategoryDIV" style="display:none;">Sub-Category : <input id="subcategoriesInput" type="text" name="subcategories" placeholder="Sub-categories"/></div>
+                        <button id="btnShowInvData" class="button is-success">Show Data</button>
+                      <div><br/><br/>
+                        <table id="viewInventoryTable" class="pure-table pure-table-bordered datatable">
+                          <thead>
+                            <tr>
+                              <th>Item Code</th>
+                              <th>Product Name</th>
+                              <th>Company</th>
+                              <th>Category</th>
+                              <th>Sub-Category</th>
+                              <th>Qty in Inventory</th>
+                              <th>Qty in Purchase Order</th>
+                              <th>Total Qty</th>
+                            </tr>
+                          </thead>
+                          <tbody>
+                        </table>
+                      </div>
+
+                    </div>
+                  </div>
+                  <!-- /#page-content-wrapper -->
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+      <!-- /#page-content-wrapper -->
+    </div>
+  </div>
+  <div id="noaccessdiv">
+    <button onclick="logout()">Logout</button>
+  </div>
+  <script src="https://www.gstatic.com/firebasejs/5.0.4/firebase.js"></script>
+  <script src="https://code.jquery.com/jquery-2.2.4.min.js" integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44=" crossorigin="anonymous"></script>
+  </script>
+  <script src="index.js"></script>
+  <script>
+  function loaddata(){
+    loadcategories();
+    loadsubcategories();
+    loadcompanies();
+  }
+  function loadcategories(){
+    autocomplete(document.getElementById("categoriesInput"), categoryarray);
+  }
+  function loadsubcategories(){
+    autocomplete(document.getElementById("subcategoriesInput"), subcategoryarray);
+  }
+  function loadcompanies(){
+    autocomplete(document.getElementById("companynameInput"), companynames);
+  }
+  </script>
+</body>
+
+</html>
