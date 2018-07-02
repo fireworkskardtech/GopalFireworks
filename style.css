@@ -231,3 +231,7 @@ input {
   padding: 25px;
 }
 /*estimate billing css ends */
+.last{
+  float:right;
+  padding-right:0;
+}

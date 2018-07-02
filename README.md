@@ -1,2 +1,0 @@
-# fireworksProject
-Fireworks project files
