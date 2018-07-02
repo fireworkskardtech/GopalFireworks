@@ -1,2 +1,2 @@
-# GopalFireworks
-Gopal
+# fireworksProject
+Fireworks project files
