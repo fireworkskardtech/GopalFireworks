@@ -9,7 +9,7 @@
   <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
   <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/all.js"></script>
 </head>
-<body background= "crack.jpg" onload="loaddata()">
+<body background= "crack.jpg">
 
   <div id="login_div" class="main-div col-lg-4">
     <h3>Fireworks Login</h3>
@@ -70,9 +70,8 @@
                                         </div>
 <div class="inputs">
 
-                                          Item code: <input id="itemcode" type="text" name="itemcode" placeholder="Item Code"/><button id="btnGetUnits" class="btn-primary" onclick="returnCurrentUnit()">Get Units</button>Product Name: <input id="productname" type="text" name="productname" placeholder="Product Name" readonly/><br/>
+                                          Item code: <input id="itemcode" list="itemcodelist" type="text" name="itemcode" placeholder="Item Code"><datalist id="itemcodelist"></datalist><button id="btnGetUnits" class="btn-primary" onclick="returnCurrentUnit()">Get Units</button>Product Name: <input id="productname" type="text" name="productname" placeholder="Product Name" readonly/><br/>
 
-                                          <div id="autocompletetagshere"></div>
                                           Date: <input id="today" type="date">
                                           <div id="showunitsdiv"></div>
 
@@ -119,12 +118,6 @@
   <script>
   let today = new Date().toISOString().substr(0, 10);
   document.querySelector("#today").value = today;
-  function loaddata(){
-    loaditemcodes();
-  }
-  function loaditemcodes(){
-    autocomplete(document.getElementById("itemcode"), itemcodes);
-  }
   </script>
 
 </body>

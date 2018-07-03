@@ -275,18 +275,41 @@ var currentunitconfig = "";
 function showcategorydata(name, type) {
   if (type == "Category") {
     categoryarray.push(name);
+    var options = '';
+    for(var i = 0; i < categoryarray.length; i++)
+    options += '<option value="'+categoryarray[i]+'" />';
+    document.getElementById('categorieslist').innerHTML = options;
+
   } else if (type == "Sub-Category") {
     subcategoryarray.push(name);
+    var options = '';
+    for(var i = 0; i < subcategoryarray.length; i++)
+    options += '<option value="'+subcategoryarray[i]+'" />';
+    document.getElementById('subcategorieslist').innerHTML = options;
   }
 }
 function showcompanyname(name) {
   companynames.push(name);
+  var options = '';
+  for(var i = 0; i < companynames.length; i++)
+  options += '<option value="'+companynames[i]+'" />';
+  document.getElementById('companydatalist').innerHTML = options;
 }
 function showcustomernumber(name) {
   customerNumbers.push(name);
+  var options = '';
+  for(var i = 0; i < customerNumbers.length; i++){
+  options += '<option value="'+customerNumbers[i].split("|")[0]+'" >'+customerNumbers[i]+'</option>';
+}
+  document.getElementById('customernumberlist').innerHTML = options;
 }
 function showitemcodes(code) {
   itemcodes.push(code);
+  var options = '';
+  for(var i = 0; i < itemcodes.length; i++){
+  options += '<option value="'+itemcodes[i].split("|")[0]+'" >'+itemcodes[i]+'</option>';
+}
+  document.getElementById('itemcodelist').innerHTML = options;
 }
 function getunitconfig(unit) {
   currentunitconfig = unit;
@@ -319,40 +342,40 @@ function returnCurrentUnit() {
   });
   if (currentunitconfig == "Case-Tin") {
 
-    $("#showunitsdiv").append('Case: <input id="case" type="text" value ="0" placeholder="Case"/> Tin: <input id="tin" type="text" value ="0" placeholder="Tin"/>');
+    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/> Tin: <input id="tin" type="text" placeholder="Tin"/>');
   } else if (currentunitconfig == "Case-Piece") {
 
-    $("#showunitsdiv").append('Case: <input id="case" type="text" value ="0" placeholder="Case"/> Piece: <input id="piece" value ="0" type="text" placeholder="Piece"/>');
+    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/> Piece: <input id="piece" type="text" placeholder="Piece"/>');
   } else if (currentunitconfig == "Case-Box-Piece") {
 
-    $("#showunitsdiv").append('Case: <input id="case" type="text" value ="0" placeholder="Case"/> Box: <input id="box" value ="0" type="text" placeholder="Box"/> Piece: <input id="piece" type="text" value ="0" placeholder="Piece"/>');
+    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/> Box: <input id="box"  type="text" placeholder="Box"/> Piece: <input id="piece" type="text" value ="0" placeholder="Piece"/>');
   } else if (currentunitconfig == "Case-Packets") {
 
-    $("#showunitsdiv").append('Case: <input id="case" type="text" value ="0" placeholder="Case"/> Packets: <input id="packets" type="text" value ="0" placeholder="Packets"/>');
+    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/> Packets: <input id="packets" type="text" placeholder="Packets"/>');
   } else if (currentunitconfig == "Bundle-Katta-Boxes") {
 
-    $("#showunitsdiv").append('Bundle: <input id="bundle" type="text" value ="0" placeholder="Bundle"/> Katta: <input id="katta" type="text" value ="0" placeholder="Katta"/>Box: <input id="box" type="text" value ="0" placeholder="Box"/>');
+    $("#showunitsdiv").append('Bundle: <input id="bundle" type="text" placeholder="Bundle"/> Katta: <input id="katta" type="text" placeholder="Katta"/>Box: <input id="box" type="text" value ="0" placeholder="Box"/>');
   } else if (currentunitconfig == "Bundle-Boxes") {
 
-    $("#showunitsdiv").append('Bundle: <input id="bundle" type="text" value ="0" placeholder="Bundle"/> Box: <input id="box" type="text" value ="0" placeholder="Box"/>');
+    $("#showunitsdiv").append('Bundle: <input id="bundle" type="text" placeholder="Bundle"/> Box: <input id="box" type="text" placeholder="Box"/>');
   } else if (currentunitconfig == "Bag-Kgs") {
 
-    $("#showunitsdiv").append('Bag: <input id="bag" type="text" value ="0" placeholder="Bag"/> Kgs: <input id="kgs" type="text" value ="0" placeholder="Kgs"/>');
+    $("#showunitsdiv").append('Bag: <input id="bag" type="text" placeholder="Bag"/> Kgs: <input id="kgs" type="text" placeholder="Kgs"/>');
   } else if (currentunitconfig == "Case-Cent-Katta") {
 
-    $("#showunitsdiv").append('Case: <input id="case" type="text" value ="0" placeholder="Case"/> Cent: <input id="cent" type="text" value ="0" placeholder="Cent"/> Katta: <input id="katta" type="text" value ="0" placeholder="Katta"/>');
+    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/> Cent: <input id="cent" type="text" placeholder="Cent"/> Katta: <input id="katta" type="text" value ="0" placeholder="Katta"/>');
   } else if (currentunitconfig == "Case-Tube") {
 
-    $("#showunitsdiv").append('Case: <input id="case" type="text" value ="0" placeholder="Case"/> Tube: <input id="tube" type="text" value ="0" placeholder="Tube"/>');
+    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/> Tube: <input id="tube" type="text" placeholder="Tube"/>');
   } else if (currentunitconfig == "Case-Cone") {
 
-    $("#showunitsdiv").append('Case: <input id="case" type="text" value ="0" placeholder="Case"/> Cone: <input id="cone" type="text" value ="0" placeholder="Cone"/>');
+    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/> Cone: <input id="cone" type="text" placeholder="Cone"/>');
   } else if (currentunitconfig == "Bag-Pieces") {
 
-    $("#showunitsdiv").append('Bag: <input id="bag" type="text" value ="0" placeholder="Bag"/> Piece: <input id="piece" type="text" value ="0" placeholder="Piece"/>');
+    $("#showunitsdiv").append('Bag: <input id="bag" type="text" placeholder="Bag"/> Piece: <input id="piece" type="text" placeholder="Piece"/>');
   } else if (currentunitconfig == "Bag-Packets") {
 
-    $("#showunitsdiv").append('Bag: <input id="bag" type="text" value ="0" placeholder="Bag"/> Packets: <input id="packets" type="text" value ="0" placeholder="Packets"/>');
+    $("#showunitsdiv").append('Bag: <input id="bag" type="text" placeholder="Bag"/> Packets: <input id="packets" type="text" placeholder="Packets"/>');
   } else {
     $("#showunitsdiv").append('<h1>Issue in selection</h1>');
   }
@@ -360,120 +383,7 @@ function returnCurrentUnit() {
   console.log($("#itemcode").val() + " " + currentunitconfig);
 }
 /* Autocomplete */
-function autocomplete(inp, arr) {
-  /*the autocomplete function takes two arguments,
-  the text field element and an array of possible autocompleted values:*/
-  var currentFocus;
-  /* execute a function when someone writes in the text field: */
-  inp.addEventListener("input", function(e) {
-    var a,
-      b,
-      i,
-      val = this.value;
-    /* close any already open lists of autocompleted values */
-    closeAllLists();
-    if (!val) {
-      return false;
-    }
-    currentFocus = -1;
-    /* create a DIV element that will contain the items (values): */
-    /* document.getElementById('autocompletetagshere').appendChild("DIV"); */
 
-    a = document.createElement("DIV");
-    a.setAttribute("id", this.id + "autocomplete-list");
-    a.setAttribute("class", "autocomplete-items");
-    /* append the DIV element as a child of the autocomplete container: */
-    document.getElementById('autocompletetagshere').appendChild(a);
-    /* for each item in the array... */
-    for (i = 0; i < arr.length; i++) {
-      /* check if the item starts with the same letters as the text field value: */
-      if (arr[i].substr(0, val.length).toUpperCase() == val.toUpperCase()) {
-        /* create a DIV element for each matching element: */
-        b = document.createElement("DIV");
-        /* make the matching letters bold: */
-        b.innerHTML = "<strong>" + arr[i].substr(0, val.length) + "</strong>";
-        b.innerHTML += arr[i].substr(val.length);
-        /* insert a input field that will hold the current array item's value: */
-        b.innerHTML += "<input type='hidden' value='" + arr[i] + "'>";
-        /* execute a function when someone clicks on the item value (DIV element): */
-        b.addEventListener("click", function(e) {
-          /* insert the value for the autocomplete text field: */
-          inp.value = this.getElementsByTagName("input")[0].value;
-
-            inp.value = inp.value.split("|")[0];
-
-          console.log("Value is " + inp.value);
-          /*close the list of autocompleted values,
-              (or any other open lists of autocompleted values:*/
-          closeAllLists();
-        });
-        a.appendChild(b);
-      }
-    }
-  });
-  /* execute a function presses a key on the keyboard: */
-  inp.addEventListener("keydown", function(e) {
-    var x = document.getElementById(this.id + "autocomplete-list");
-    if (x)
-      x = x.getElementsByTagName("div");
-    if (e.keyCode == 40) {
-      /*If the arrow DOWN key is pressed,
-        increase the currentFocus variable:*/
-      currentFocus++;
-      /* and and make the current item more visible: */
-      addActive(x);
-    } else if (e.keyCode == 38) { //up
-      /*If the arrow UP key is pressed,
-        decrease the currentFocus variable:*/
-      currentFocus--;
-      /* and and make the current item more visible: */
-      addActive(x);
-    } else if (e.keyCode == 13) {
-      /* If the ENTER key is pressed, prevent the form from being submitted, */
-      e.preventDefault();
-      if (currentFocus > -1) {
-        /* and simulate a click on the "active" item: */
-        if (x)
-          x[currentFocus].click();
-        }
-      }
-  });
-  function addActive(x) {
-    /* a function to classify an item as "active": */
-    if (!x)
-      return false;
-
-    /* start by removing the "active" class on all items: */
-    removeActive(x);
-    if (currentFocus >= x.length)
-      currentFocus = 0;
-    if (currentFocus < 0)
-      currentFocus = (x.length - 1);
-
-    /* add class "autocomplete-active": */
-    x[currentFocus].classList.add("autocomplete-active");
-  }
-  function removeActive(x) {
-    /* a function to remove the "active" class from all autocomplete items: */
-    for (var i = 0; i < x.length; i++) {
-      x[i].classList.remove("autocomplete-active");
-    }
-  }
-  function closeAllLists(elmnt) {
-    /*close all autocomplete lists in the document,
-    except the one passed as an argument:*/
-    var x = document.getElementsByClassName("autocomplete-items");
-    for (var i = 0; i < x.length; i++) {
-      if (elmnt != x[i] && elmnt != inp) {
-        x[i].parentNode.removeChild(x[i]);
-      }
-    }
-  }
-  /* execute a function when someone clicks in the document: */
-  document.addEventListener("click", function(e) {
-    closeAllLists(e.target);
-  });
-}
 database.ref('categories').on('child_added', function(data) {
   add_categories_data_table(data.val().name, data.val().type);
 });
