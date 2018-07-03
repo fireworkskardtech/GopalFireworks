@@ -81,10 +81,11 @@
                         Company: <input type="checkbox" id="companyCheckbox" onclick="showCompanyInput()"/>
                         Category: <input type="checkbox" id="categoryCheckbox" onclick="showCategoryInput()"/>
                         Sub-Category: <input type="checkbox" id="subCategoryCheckbox" onclick="showSubCategoryInput()"/>
-                        <div id="companyDIV"  style="display:none;">Company Name : <input id="companynameInput" type="text" name="companyname" placeholder="Company Name"/></div>
+                        <div id="autocompletetagshere"></div>
+                        <div id="companyDIV"  style="display:none;">Company Name : <input id="companynameInput" type="text" name="companyname" placeholder="Company Name" /></div>
                         <div id="categoryDIV" style="display:none;">Category : <input id="categoriesInput" type="text" name="categories" placeholder="Categories"/></div>
                         <div id="subCategoryDIV" style="display:none;">Sub-Category : <input id="subcategoriesInput" type="text" name="subcategories" placeholder="Sub-categories"/></div>
-                        <button id="btnShowInvData" class="button is-success">Show Data</button>
+                        <button id="btnShowInvData" class="button is-success" onclick="viewInventoryTable()">Show Data</button>
                       <div><br/><br/>
                         <table id="viewInventoryTable" class="pure-table pure-table-bordered datatable">
                           <thead>

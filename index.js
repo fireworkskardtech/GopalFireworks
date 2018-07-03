@@ -319,40 +319,40 @@ function returnCurrentUnit() {
   });
   if (currentunitconfig == "Case-Tin") {
 
-    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/> Tin: <input id="tin" type="text" placeholder="Tin"/>');
+    $("#showunitsdiv").append('Case: <input id="case" type="text" value ="0" placeholder="Case"/> Tin: <input id="tin" type="text" value ="0" placeholder="Tin"/>');
   } else if (currentunitconfig == "Case-Piece") {
 
-    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/> Piece: <input id="piece" type="text" placeholder="Piece"/>');
+    $("#showunitsdiv").append('Case: <input id="case" type="text" value ="0" placeholder="Case"/> Piece: <input id="piece" value ="0" type="text" placeholder="Piece"/>');
   } else if (currentunitconfig == "Case-Box-Piece") {
 
-    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/> Box: <input id="box" type="text" placeholder="Box"/> Piece: <input id="piece" type="text" placeholder="Piece"/>');
+    $("#showunitsdiv").append('Case: <input id="case" type="text" value ="0" placeholder="Case"/> Box: <input id="box" value ="0" type="text" placeholder="Box"/> Piece: <input id="piece" type="text" value ="0" placeholder="Piece"/>');
   } else if (currentunitconfig == "Case-Packets") {
 
-    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/> Packets: <input id="packets" type="text" placeholder="Packets"/>');
+    $("#showunitsdiv").append('Case: <input id="case" type="text" value ="0" placeholder="Case"/> Packets: <input id="packets" type="text" value ="0" placeholder="Packets"/>');
   } else if (currentunitconfig == "Bundle-Katta-Boxes") {
 
-    $("#showunitsdiv").append('Bundle: <input id="bundle" type="text" placeholder="Bundle"/> Katta: <input id="katta" type="text" placeholder="Katta"/>Box: <input id="box" type="text" placeholder="Box"/>');
+    $("#showunitsdiv").append('Bundle: <input id="bundle" type="text" value ="0" placeholder="Bundle"/> Katta: <input id="katta" type="text" value ="0" placeholder="Katta"/>Box: <input id="box" type="text" value ="0" placeholder="Box"/>');
   } else if (currentunitconfig == "Bundle-Boxes") {
 
-    $("#showunitsdiv").append('Bundle: <input id="bundle" type="text" placeholder="Bundle"/> Box: <input id="box" type="text" placeholder="Box"/>');
+    $("#showunitsdiv").append('Bundle: <input id="bundle" type="text" value ="0" placeholder="Bundle"/> Box: <input id="box" type="text" value ="0" placeholder="Box"/>');
   } else if (currentunitconfig == "Bag-Kgs") {
 
-    $("#showunitsdiv").append('Bag: <input id="bag" type="text" placeholder="Bag"/> Kgs: <input id="kgs" type="text" placeholder="Kgs"/>');
+    $("#showunitsdiv").append('Bag: <input id="bag" type="text" value ="0" placeholder="Bag"/> Kgs: <input id="kgs" type="text" value ="0" placeholder="Kgs"/>');
   } else if (currentunitconfig == "Case-Cent-Katta") {
 
-    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/> Cent: <input id="cent" type="text" placeholder="Cent"/> Katta: <input id="katta" type="text" placeholder="Katta"/>');
+    $("#showunitsdiv").append('Case: <input id="case" type="text" value ="0" placeholder="Case"/> Cent: <input id="cent" type="text" value ="0" placeholder="Cent"/> Katta: <input id="katta" type="text" value ="0" placeholder="Katta"/>');
   } else if (currentunitconfig == "Case-Tube") {
 
-    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/> Tube: <input id="tube" type="text" placeholder="Tube"/>');
+    $("#showunitsdiv").append('Case: <input id="case" type="text" value ="0" placeholder="Case"/> Tube: <input id="tube" type="text" value ="0" placeholder="Tube"/>');
   } else if (currentunitconfig == "Case-Cone") {
 
-    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/> Cone: <input id="cone" type="text" placeholder="Cone"/>');
+    $("#showunitsdiv").append('Case: <input id="case" type="text" value ="0" placeholder="Case"/> Cone: <input id="cone" type="text" value ="0" placeholder="Cone"/>');
   } else if (currentunitconfig == "Bag-Pieces") {
 
-    $("#showunitsdiv").append('Bag: <input id="bag" type="text" placeholder="Bag"/> Piece: <input id="piece" type="text" placeholder="Piece"/>');
+    $("#showunitsdiv").append('Bag: <input id="bag" type="text" value ="0" placeholder="Bag"/> Piece: <input id="piece" type="text" value ="0" placeholder="Piece"/>');
   } else if (currentunitconfig == "Bag-Packets") {
 
-    $("#showunitsdiv").append('Bag: <input id="bag" type="text" placeholder="Bag"/> Packets: <input id="packets" type="text" placeholder="Packets"/>');
+    $("#showunitsdiv").append('Bag: <input id="bag" type="text" value ="0" placeholder="Bag"/> Packets: <input id="packets" type="text" value ="0" placeholder="Packets"/>');
   } else {
     $("#showunitsdiv").append('<h1>Issue in selection</h1>');
   }

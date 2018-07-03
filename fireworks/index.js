@@ -13,6 +13,7 @@ var caseunitadd = 0,
   coneadd = 0,
   itemcodeadd = 0;
   let itemcodeInv="",totalPOqty="",totalInvqty="",totalqtyInvPO="";
+  var splitvariabletwo=false;
 //Get current date
 var currentdate = new Date().toLocaleString();;
 //Configuring Firebase application
@@ -179,7 +180,6 @@ $("#btnClose,.btnClose").click(function() {
 /*************seller management***************/
 database.ref('sellers').on('child_added', function(data) {
   add_seller_data_table(data.val().sellername, data.val().companyname, data.val().phonenumber, data.val().whatsappnumber, data.val().address, data.val().pincode, data.val().email, data.key);
-
 });
 database.ref('sellers').on('child_changed', function(data) {
   update_seller_data_table(data.val().sellername, data.val().companyname, data.val().phonenumber, data.val().whatsappnumber, data.val().address, data.val().pincode, data.val().email, data.key);
@@ -301,7 +301,7 @@ database.ref('sellers').on('child_added', function(data) {
 });
 //Add values to customers array
 database.ref('customers').on('child_added', function(data) {
-  showcustomernumber(data.val().phonenumber);
+  showcustomernumber(data.val().phonenumber+'|'+data.val().customername);
 });
 //Add values to itemcode array
 database.ref('products').on('child_added', function(data) {
@@ -319,40 +319,40 @@ function returnCurrentUnit() {
   });
   if (currentunitconfig == "Case-Tin") {
 
-    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/> Tin: <input id="tin" type="text" placeholder="Tin"/>');
+    $("#showunitsdiv").append('Case: <input id="case" type="text" value ="0" placeholder="Case"/> Tin: <input id="tin" type="text" value ="0" placeholder="Tin"/>');
   } else if (currentunitconfig == "Case-Piece") {
 
-    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/> Piece: <input id="piece" type="text" placeholder="Piece"/>');
+    $("#showunitsdiv").append('Case: <input id="case" type="text" value ="0" placeholder="Case"/> Piece: <input id="piece" value ="0" type="text" placeholder="Piece"/>');
   } else if (currentunitconfig == "Case-Box-Piece") {
 
-    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/> Box: <input id="box" type="text" placeholder="Box"/> Piece: <input id="piece" type="text" placeholder="Piece"/>');
+    $("#showunitsdiv").append('Case: <input id="case" type="text" value ="0" placeholder="Case"/> Box: <input id="box" value ="0" type="text" placeholder="Box"/> Piece: <input id="piece" type="text" value ="0" placeholder="Piece"/>');
   } else if (currentunitconfig == "Case-Packets") {
 
-    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/> Packets: <input id="packets" type="text" placeholder="Packets"/>');
+    $("#showunitsdiv").append('Case: <input id="case" type="text" value ="0" placeholder="Case"/> Packets: <input id="packets" type="text" value ="0" placeholder="Packets"/>');
   } else if (currentunitconfig == "Bundle-Katta-Boxes") {
 
-    $("#showunitsdiv").append('Bundle: <input id="bundle" type="text" placeholder="Bundle"/> Katta: <input id="katta" type="text" placeholder="Katta"/>Box: <input id="box" type="text" placeholder="Box"/>');
+    $("#showunitsdiv").append('Bundle: <input id="bundle" type="text" value ="0" placeholder="Bundle"/> Katta: <input id="katta" type="text" value ="0" placeholder="Katta"/>Box: <input id="box" type="text" value ="0" placeholder="Box"/>');
   } else if (currentunitconfig == "Bundle-Boxes") {
 
-    $("#showunitsdiv").append('Bundle: <input id="bundle" type="text" placeholder="Bundle"/> Box: <input id="box" type="text" placeholder="Box"/>');
+    $("#showunitsdiv").append('Bundle: <input id="bundle" type="text" value ="0" placeholder="Bundle"/> Box: <input id="box" type="text" value ="0" placeholder="Box"/>');
   } else if (currentunitconfig == "Bag-Kgs") {
 
-    $("#showunitsdiv").append('Bag: <input id="bag" type="text" placeholder="Bag"/> Kgs: <input id="kgs" type="text" placeholder="Kgs"/>');
+    $("#showunitsdiv").append('Bag: <input id="bag" type="text" value ="0" placeholder="Bag"/> Kgs: <input id="kgs" type="text" value ="0" placeholder="Kgs"/>');
   } else if (currentunitconfig == "Case-Cent-Katta") {
 
-    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/> Cent: <input id="cent" type="text" placeholder="Cent"/> Katta: <input id="katta" type="text" placeholder="Katta"/>');
+    $("#showunitsdiv").append('Case: <input id="case" type="text" value ="0" placeholder="Case"/> Cent: <input id="cent" type="text" value ="0" placeholder="Cent"/> Katta: <input id="katta" type="text" value ="0" placeholder="Katta"/>');
   } else if (currentunitconfig == "Case-Tube") {
 
-    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/> Tube: <input id="tube" type="text" placeholder="Tube"/>');
+    $("#showunitsdiv").append('Case: <input id="case" type="text" value ="0" placeholder="Case"/> Tube: <input id="tube" type="text" value ="0" placeholder="Tube"/>');
   } else if (currentunitconfig == "Case-Cone") {
 
-    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/> Cone: <input id="cone" type="text" placeholder="Cone"/>');
+    $("#showunitsdiv").append('Case: <input id="case" type="text" value ="0" placeholder="Case"/> Cone: <input id="cone" type="text" value ="0" placeholder="Cone"/>');
   } else if (currentunitconfig == "Bag-Pieces") {
 
-    $("#showunitsdiv").append('Bag: <input id="bag" type="text" placeholder="Bag"/> Piece: <input id="piece" type="text" placeholder="Piece"/>');
+    $("#showunitsdiv").append('Bag: <input id="bag" type="text" value ="0" placeholder="Bag"/> Piece: <input id="piece" type="text" value ="0" placeholder="Piece"/>');
   } else if (currentunitconfig == "Bag-Packets") {
 
-    $("#showunitsdiv").append('Bag: <input id="bag" type="text" placeholder="Bag"/> Packets: <input id="packets" type="text" placeholder="Packets"/>');
+    $("#showunitsdiv").append('Bag: <input id="bag" type="text" value ="0" placeholder="Bag"/> Packets: <input id="packets" type="text" value ="0" placeholder="Packets"/>');
   } else {
     $("#showunitsdiv").append('<h1>Issue in selection</h1>');
   }
@@ -399,7 +399,9 @@ function autocomplete(inp, arr) {
         b.addEventListener("click", function(e) {
           /* insert the value for the autocomplete text field: */
           inp.value = this.getElementsByTagName("input")[0].value;
-          inp.value = inp.value.split("|")[0]
+
+            inp.value = inp.value.split("|")[0];
+
           console.log("Value is " + inp.value);
           /*close the list of autocompleted values,
               (or any other open lists of autocompleted values:*/
@@ -1436,7 +1438,7 @@ function add_itemToInv_BundleKattaBox_data(itemcode, bundle, katta, box, today) 
 function add_itemToInv_BundleBox_data(itemcode, bundle, box, today) {
   database.ref('inventory/' + itemcode).update({itemcode: itemcode, bundle: bundle, box: box, last_added: today});
 }
-function add_itemToInv_BagKgs_data(itemcode, bundle, kgs, today) {
+function add_itemToInv_BagKgs_data(itemcode, bag, kgs, today) {
   database.ref('inventory/' + itemcode).update({itemcode: itemcode, bag: bag, kgs: kgs, last_added: today});
 }
 function add_itemToInv_CaseCentKatta_data(itemcode, caseunit, cent, katta, today) {
@@ -2332,7 +2334,7 @@ function add_itemToPurchaseOrder_BundleBox_data(itemcode, bundle, box, totalbund
     totalorderedbox: totalbox
   });
 }
-function add_itemToPurchaseOrder_BagKgs_data(itemcode, bundle, kgs, totalbundle, totalkgs, today) {
+function add_itemToPurchaseOrder_BagKgs_data(itemcode, bag, kgs, totalbag, totalkgs, today) {
   database.ref('purchaseorder/' + itemcode).update({
     itemcode: itemcode,
     bag: bag,
@@ -2569,153 +2571,631 @@ function showSubCategoryInput(){
        subcategory.style.display = "none";
     }
 }
-database.ref('inventory').on('child_added', function(data) {
-  itemcodeInv = data.val().itemcode;
-  switch (data.val().unit) {
-    case "Case-Box-Piece":
-    database.ref('purchaseorder/'+itemcodeInv).once("value").then(function(snapshot) {
-          totalPOqty = "Case : "+snapshot.val().case+" Box : "+snapshot.val().box+" Piece : "+snapshot.val().piece;
-          caseunitadd=parseInt(snapshot.val().case);
-          boxadd=parseInt(snapshot.val().box);
-          pieceadd=parseInt(snapshot.val().piece);
-          totalInvqty = "Case : "+data.val().case+" Box : "+data.val().box+" Piece : "+data.val().piece;
-          caseunitadd=caseunitadd+parseInt(data.val().case);
-          boxadd=boxadd+parseInt(data.val().box);
-          pieceadd=pieceadd+parseInt(data.val().piece);
-          totalqtyInvPO ="Case : "+caseunitadd+" Box : "+boxadd+" Piece : "+pieceadd;
-          add_invAndPOView_data_table(itemcodeInv,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
-      });
-      break;
-      case "Case-Piece":
+function viewInventoryTable(){
+    $("#viewInventoryTable").find("tr:gt(0)").remove();
+  database.ref('inventory').on('child_added', function(data) {
+    var companycheckBox = document.getElementById("companyCheckbox");
+    var categorycheckBox = document.getElementById("categoryCheckbox");
+    var subcategorycheckBox = document.getElementById("subCategoryCheckbox");
+    itemcodeInv = data.val().itemcode;
+    switch (data.val().unit) {
+      case "Case-Box-Piece":
       database.ref('purchaseorder/'+itemcodeInv).once("value").then(function(snapshot) {
-            totalPOqty = "Case : "+snapshot.val().case+" Piece : "+snapshot.val().piece;
-            totalInvqty = "Case : "+data.val().case+" Piece : "+data.val().piece;
+            totalPOqty = "Case : "+snapshot.val().case+" Box : "+snapshot.val().box+" Piece : "+snapshot.val().piece;
             caseunitadd=parseInt(snapshot.val().case);
-            pieceadd=parseInt(snapshot.val().piece);
-            caseunitadd=caseunitadd+parseInt(data.val().case);
-            pieceadd=pieceadd+parseInt(data.val().piece);
-            totalqtyInvPO ="Case : "+caseunitadd+" Piece : "+pieceadd;
-            add_invAndPOView_data_table(itemcodeInv,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
-        });
-        break;
-      case "Case-Packets":
-        tdatabase.ref('purchaseorder/'+itemcodeInv).once("value").then(function(snapshot) {
-              totalPOqty = "Case : "+snapshot.val().case+" Packets : "+snapshot.val().packets;
-              totalInvqty = "Case : "+data.val().case+" Packets : "+data.val().packets;
-              caseunitadd=parseInt(snapshot.val().case);
-              packetsadd=parseInt(snapshot.val().packets);
-              caseunitadd=caseunitadd+parseInt(data.val().case);
-              packetsadd=pieceadd+parseInt(data.val().packets);
-              totalqtyInvPO ="Case : "+caseunitadd+" Packets : "+packetsadd;
-              add_invAndPOView_data_table(itemcodeInv,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
-          });
-        break;
-      case "Case-Tin":
-      database.ref('purchaseorder/'+itemcodeInv).once("value").then(function(snapshot) {
-            totalPOqty = "Case : "+snapshot.val().case+" Tin : "+snapshot.val().tin;
-            totalInvqty = "Case : "+data.val().case+" Tin : "+data.val().tin;
-            caseunitadd=parseInt(snapshot.val().case);
-            tinadd=parseInt(snapshot.val().tin);
-            caseunitadd=caseunitadd+parseInt(data.val().case);
-            tinadd=tinadd+parseInt(data.val().tin);
-            totalqtyInvPO ="Case : "+caseunitadd+" Tin : "+tinadd;
-            add_invAndPOView_data_table(itemcodeInv,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
-        });
-        break;
-      case "Bundle-Katta-Boxes":
-      database.ref('purchaseorder/'+itemcodeInv).once("value").then(function(snapshot) {
-            totalPOqty = "Bundle : "+snapshot.val().bundle+" Katta : "+snapshot.val().katta+" Box : "+snapshot.val().box;
-            bundleadd=parseInt(snapshot.val().bundle);
-            kattaadd=parseInt(snapshot.val().katta);
-            boxadd=parseInt(snapshot.val().boxadd);
-            totalInvqty = "Bundle : "+data.val().bundle+" Katta : "+data.val().katta+" Box : "+data.val().box;
-            bundleadd=bundleadd+parseInt(data.val().bundle);
-            boxadd=boxadd+parseInt(data.val().box);
-            kattaadd=kattaadd+parseInt(data.val().katta);
-            totalqtyInvPO ="Bundle : "+bundleadd+" Katta : "+kattaadd+" Box : "+boxadd;
-            add_invAndPOView_data_table(itemcodeInv,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
-        });
-        break;
-      case "Bundle-Boxes":
-      database.ref('purchaseorder/'+itemcodeInv).once("value").then(function(snapshot) {
-            totalPOqty = "Bundle : "+snapshot.val().bundle+" Box : "+snapshot.val().box;
-            totalInvqty = "Bundle : "+data.val().bundle+" Box : "+data.val().box;
-            bundleadd=parseInt(snapshot.val().bundle);
             boxadd=parseInt(snapshot.val().box);
-            bundleadd=bundleadd+parseInt(data.val().bundle);
-            boxadd=boxadd+parseInt(data.val().box);
-            totalqtyInvPO ="Bundle : "+bundleadd+" Box : "+boxadd;
-            add_invAndPOView_data_table(itemcodeInv,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
-        });
-        break;
-      case "Bag-Kgs":
-      database.ref('purchaseorder/'+itemcodeInv).once("value").then(function(snapshot) {
-            totalPOqty = "Bag : "+snapshot.val().bag+" Kgs : "+snapshot.val().kgs;
-            totalInvqty = "Bag : "+data.val().bag+" Kgs : "+data.val().kgs;
-            bagadd=parseInt(snapshot.val().bag);
-            kgsadd=parseInt(snapshot.val().kgs);
-            bagadd=bagadd+parseInt(data.val().bag);
-            kgsadd=kgsadd+parseInt(data.val().kgs);
-            totalqtyInvPO ="Bag : "+bagadd+" Kgs : "+kgsadd;
-            add_invAndPOView_data_table(itemcodeInv,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
-        });
-        break;//edit cube case
-      case "Case-Tube":
-      database.ref('purchaseorder/'+itemcodeInv).once("value").then(function(snapshot) {
-            totalPOqty = "Case : "+snapshot.val().case+" Tube : "+snapshot.val().tube;
-            totalInvqty = "Case : "+data.val().case+" Tube : "+data.val().tube;
-            caseunitadd=parseInt(snapshot.val().case);
-            tubeadd=parseInt(snapshot.val().tube);
-            caseunitadd=caseunitadd+parseInt(data.val().case);
-            tubeadd=tubeadd+parseInt(data.val().tube);
-            totalqtyInvPO ="Case : "+caseunitadd+" Tube : "+tubeadd;
-            add_invAndPOView_data_table(itemcodeInv,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
-        });
-        break;
-      case "Case-Cone":
-      database.ref('purchaseorder/'+itemcodeInv).once("value").then(function(snapshot) {
-            totalPOqty = "Case : "+snapshot.val().case+" Cone : "+snapshot.val().cone;
-            totalInvqty = "Case : "+data.val().case+" Cone : "+data.val().cone;
-            caseunitadd=parseInt(snapshot.val().case);
-            coneadd=parseInt(snapshot.val().cone);
-            caseunitadd=caseunitadd+parseInt(data.val().case);
-            coneadd=coneadd+parseInt(data.val().cone);
-            totalqtyInvPO ="Case : "+caseunitadd+" Cone : "+coneadd;
-            add_invAndPOView_data_table(itemcodeInv,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
-        });
-        break;
-      case "Bag-Packets":
-      database.ref('purchaseorder/'+itemcodeInv).once("value").then(function(snapshot) {
-            totalPOqty = "Bag : "+snapshot.val().bag+" Packets : "+snapshot.val().packets;
-            totalInvqty = "Bag : "+data.val().bag+" Packets : "+data.val().packets;
-            bagadd=parseInt(snapshot.val().bag);
-            packetsadd=parseInt(snapshot.val().packets);
-            bagadd=bagadd+parseInt(data.val().bag);
-            packetsadd=packetsadd+parseInt(data.val().packets);
-            totalqtyInvPO ="Bag : "+bagadd+" Packets : "+packetsadd;
-            add_invAndPOView_data_table(itemcodeInv,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
-        });
-        break;
-      case "Bag-Pieces":
-      database.ref('purchaseorder/'+itemcodeInv).once("value").then(function(snapshot) {
-            totalPOqty = "Bag : "+snapshot.val().bag+" Piece : "+snapshot.val().piece;
-            totalInvqty = "Bag : "+data.val().bag+" Piece : "+data.val().piece;
-            bagadd=parseInt(snapshot.val().bag);
             pieceadd=parseInt(snapshot.val().piece);
-            bagadd=bagadd+parseInt(data.val().bag);
-            pieceadd=packetsadd+parseInt(data.val().piece);
-            totalqtyInvPO ="Bag : "+bagadd+" Piece : "+pieceadd;
-            add_invAndPOView_data_table(itemcodeInv,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+            totalInvqty = "Case : "+data.val().case+" Box : "+data.val().box+" Piece : "+data.val().piece;
+            caseunitadd=caseunitadd+parseInt(data.val().case);
+            boxadd=boxadd+parseInt(data.val().box);
+            pieceadd=pieceadd+parseInt(data.val().piece);
+            totalqtyInvPO ="Case : "+caseunitadd+" Box : "+boxadd+" Piece : "+pieceadd;
+            if (companyCheckbox.checked == false && categorycheckBox.checked == false && subcategorycheckBox.checked == false){
+              console.log("2598");
+              add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+            }
+            else if (companyCheckbox.checked == true && categorycheckBox.checked == false && subcategorycheckBox.checked == false){
+              if($("#companynameInput").val() == data.val().companyname){
+                add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+              }
+            }
+            else if (companyCheckbox.checked == false && categorycheckBox.checked == true && subcategorycheckBox.checked == false){
+              if($("#categoriesInput").val() == data.val().category){
+                add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+              }
+            }
+            else if (companyCheckbox.checked == false && categorycheckBox.checked == false && subcategorycheckBox.checked == true){
+              if($("#subcategoriesInput").val() == data.val().subcategory){
+                add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+              }
+            }
+            else if (companyCheckbox.checked == true && categorycheckBox.checked == true && subcategorycheckBox.checked == false){
+              if($("#companynameInput").val() == data.val().companyname && $("#categoriesInput").val() == data.val().category){
+                add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+              }
+            }
+            else if (companyCheckbox.checked == true && categorycheckBox.checked == false && subcategorycheckBox.checked == true){
+              if($("#companynameInput").val() == data.val().companyname && $("#subcategoriesInput").val() == data.val().subcategory){
+                add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+              }
+            }
+            else if (companyCheckbox.checked == false && categorycheckBox.checked == true && subcategorycheckBox.checked == true){
+                if($("#categoriesInput").val() == data.val().category && $("#subcategoriesInput").val() == data.val().subcategory){
+                add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+              }
+            }
+            else if (companyCheckbox.checked == true && categorycheckBox.checked == true && subcategorycheckBox.checked == true){
+                if($("#categoriesInput").val() == data.val().category && $("#subcategoriesInput").val() == data.val().subcategory && $("#companynameInput").val() == data.val().companyname){
+                add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+              }
+            }
+
+
         });
         break;
-      default:
-        console.log("No package found");
-    }
+        case "Case-Piece":
+        database.ref('purchaseorder/'+itemcodeInv).once("value").then(function(snapshot) {
+              totalPOqty = "Case : "+snapshot.val().case+" Piece : "+snapshot.val().piece;
+              totalInvqty = "Case : "+data.val().case+" Piece : "+data.val().piece;
+              caseunitadd=parseInt(snapshot.val().case);
+              pieceadd=parseInt(snapshot.val().piece);
+              caseunitadd=caseunitadd+parseInt(data.val().case);
+              pieceadd=pieceadd+parseInt(data.val().piece);
+              totalqtyInvPO ="Case : "+caseunitadd+" Piece : "+pieceadd;
+              if (companyCheckbox.checked == false && categorycheckBox.checked == false && subcategorycheckBox.checked == false){
+                console.log("2598");
+                add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == false && subcategorycheckBox.checked == false){
+                if($("#companynameInput").val() == data.val().companyname){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == true && subcategorycheckBox.checked == false){
+                if($("#categoriesInput").val() == data.val().category){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == false && subcategorycheckBox.checked == true){
+                if($("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == true && subcategorycheckBox.checked == false){
+                if($("#companynameInput").val() == data.val().companyname && $("#categoriesInput").val() == data.val().category){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == false && subcategorycheckBox.checked == true){
+                if($("#companynameInput").val() == data.val().companyname && $("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == true && subcategorycheckBox.checked == true){
+                  if($("#categoriesInput").val() == data.val().category && $("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == true && subcategorycheckBox.checked == true){
+                  if($("#categoriesInput").val() == data.val().category && $("#subcategoriesInput").val() == data.val().subcategory && $("#companynameInput").val() == data.val().companyname){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+                   });
+          break;
+        case "Case-Packets":
+          database.ref('purchaseorder/'+itemcodeInv).once("value").then(function(snapshot) {
+                totalPOqty = "Case : "+snapshot.val().case+" Packets : "+snapshot.val().packets;
+                totalInvqty = "Case : "+data.val().case+" Packets : "+data.val().packets;
+                caseunitadd=parseInt(snapshot.val().case);
+                packetsadd=parseInt(snapshot.val().packets);
+                caseunitadd=caseunitadd+parseInt(data.val().case);
+                packetsadd=pieceadd+parseInt(data.val().packets);
+                totalqtyInvPO ="Case : "+caseunitadd+" Packets : "+packetsadd;
+                if (companyCheckbox.checked == false && categorycheckBox.checked == false && subcategorycheckBox.checked == false){
+                  console.log("2598");
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+                else if (companyCheckbox.checked == true && categorycheckBox.checked == false && subcategorycheckBox.checked == false){
+                  if($("#companynameInput").val() == data.val().companyname){
+                    add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                  }
+                }
+                else if (companyCheckbox.checked == false && categorycheckBox.checked == true && subcategorycheckBox.checked == false){
+                  if($("#categoriesInput").val() == data.val().category){
+                    add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                  }
+                }
+                else if (companyCheckbox.checked == false && categorycheckBox.checked == false && subcategorycheckBox.checked == true){
+                  if($("#subcategoriesInput").val() == data.val().subcategory){
+                    add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                  }
+                }
+                else if (companyCheckbox.checked == true && categorycheckBox.checked == true && subcategorycheckBox.checked == false){
+                  if($("#companynameInput").val() == data.val().companyname && $("#categoriesInput").val() == data.val().category){
+                    add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                  }
+                }
+                else if (companyCheckbox.checked == true && categorycheckBox.checked == false && subcategorycheckBox.checked == true){
+                  if($("#companynameInput").val() == data.val().companyname && $("#subcategoriesInput").val() == data.val().subcategory){
+                    add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                  }
+                }
+                else if (companyCheckbox.checked == false && categorycheckBox.checked == true && subcategorycheckBox.checked == true){
+                    if($("#categoriesInput").val() == data.val().category && $("#subcategoriesInput").val() == data.val().subcategory){
+                    add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                  }
+                }
+                else if (companyCheckbox.checked == true && categorycheckBox.checked == true && subcategorycheckBox.checked == true){
+                    if($("#categoriesInput").val() == data.val().category && $("#subcategoriesInput").val() == data.val().subcategory && $("#companynameInput").val() == data.val().companyname){
+                    add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                  }
+                }
+                       });
+          break;
+        case "Case-Tin":
+        database.ref('purchaseorder/'+itemcodeInv).once("value").then(function(snapshot) {
+              totalPOqty = "Case : "+snapshot.val().case+" Tin : "+snapshot.val().tin;
+              totalInvqty = "Case : "+data.val().case+" Tin : "+data.val().tin;
+              caseunitadd=parseInt(snapshot.val().case);
+              tinadd=parseInt(snapshot.val().tin);
+              caseunitadd=caseunitadd+parseInt(data.val().case);
+              tinadd=tinadd+parseInt(data.val().tin);
+              totalqtyInvPO ="Case : "+caseunitadd+" Tin : "+tinadd;
+              if (companyCheckbox.checked == false && categorycheckBox.checked == false && subcategorycheckBox.checked == false){
+                console.log("2598");
+                add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == false && subcategorycheckBox.checked == false){
+                if($("#companynameInput").val() == data.val().companyname){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == true && subcategorycheckBox.checked == false){
+                if($("#categoriesInput").val() == data.val().category){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == false && subcategorycheckBox.checked == true){
+                if($("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == true && subcategorycheckBox.checked == false){
+                if($("#companynameInput").val() == data.val().companyname && $("#categoriesInput").val() == data.val().category){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == false && subcategorycheckBox.checked == true){
+                if($("#companynameInput").val() == data.val().companyname && $("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == true && subcategorycheckBox.checked == true){
+                  if($("#categoriesInput").val() == data.val().category && $("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == true && subcategorycheckBox.checked == true){
+                  if($("#categoriesInput").val() == data.val().category && $("#subcategoriesInput").val() == data.val().subcategory && $("#companynameInput").val() == data.val().companyname){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+                  });
+          break;
+        case "Bundle-Katta-Boxes":
+        database.ref('purchaseorder/'+itemcodeInv).once("value").then(function(snapshot) {
+              totalPOqty = "Bundle : "+snapshot.val().bundle+" Katta : "+snapshot.val().katta+" Box : "+snapshot.val().box;
+              bundleadd=parseInt(snapshot.val().bundle);
+              kattaadd=parseInt(snapshot.val().katta);
+              boxadd=parseInt(snapshot.val().box);
+              totalInvqty = "Bundle : "+data.val().bundle+" Katta : "+data.val().katta+" Box : "+data.val().box;
+              bundleadd=bundleadd+parseInt(data.val().bundle);
+              boxadd=boxadd+parseInt(data.val().box);
+              kattaadd=kattaadd+parseInt(data.val().katta);
+              totalqtyInvPO ="Bundle : "+bundleadd+" Katta : "+kattaadd+" Box : "+boxadd;
+              if (companyCheckbox.checked == false && categorycheckBox.checked == false && subcategorycheckBox.checked == false){
+                console.log("2598");
+                add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == false && subcategorycheckBox.checked == false){
+                if($("#companynameInput").val() == data.val().companyname){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == true && subcategorycheckBox.checked == false){
+                if($("#categoriesInput").val() == data.val().category){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == false && subcategorycheckBox.checked == true){
+                if($("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == true && subcategorycheckBox.checked == false){
+                if($("#companynameInput").val() == data.val().companyname && $("#categoriesInput").val() == data.val().category){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == false && subcategorycheckBox.checked == true){
+                if($("#companynameInput").val() == data.val().companyname && $("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == true && subcategorycheckBox.checked == true){
+                  if($("#categoriesInput").val() == data.val().category && $("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == true && subcategorycheckBox.checked == true){
+                  if($("#categoriesInput").val() == data.val().category && $("#subcategoriesInput").val() == data.val().subcategory && $("#companynameInput").val() == data.val().companyname){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+                    });
+          break;
+        case "Bundle-Boxes":
+        database.ref('purchaseorder/'+itemcodeInv).once("value").then(function(snapshot) {
+              totalPOqty = "Bundle : "+snapshot.val().bundle+" Box : "+snapshot.val().box;
+              totalInvqty = "Bundle : "+data.val().bundle+" Box : "+data.val().box;
+              bundleadd=parseInt(snapshot.val().bundle);
+              boxadd=parseInt(snapshot.val().box);
+              bundleadd=bundleadd+parseInt(data.val().bundle);
+              boxadd=boxadd+parseInt(data.val().box);
+              totalqtyInvPO ="Bundle : "+bundleadd+" Box : "+boxadd;
+              if (companyCheckbox.checked == false && categorycheckBox.checked == false && subcategorycheckBox.checked == false){
+                console.log("2598");
+                add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == false && subcategorycheckBox.checked == false){
+                if($("#companynameInput").val() == data.val().companyname){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == true && subcategorycheckBox.checked == false){
+                if($("#categoriesInput").val() == data.val().category){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == false && subcategorycheckBox.checked == true){
+                if($("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == true && subcategorycheckBox.checked == false){
+                if($("#companynameInput").val() == data.val().companyname && $("#categoriesInput").val() == data.val().category){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == false && subcategorycheckBox.checked == true){
+                if($("#companynameInput").val() == data.val().companyname && $("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == true && subcategorycheckBox.checked == true){
+                  if($("#categoriesInput").val() == data.val().category && $("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == true && subcategorycheckBox.checked == true){
+                  if($("#categoriesInput").val() == data.val().category && $("#subcategoriesInput").val() == data.val().subcategory && $("#companynameInput").val() == data.val().companyname){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+                   });
+          break;
+        case "Bag-Kgs":
+        database.ref('purchaseorder/'+itemcodeInv).once("value").then(function(snapshot) {
+              totalPOqty = "Bag : "+snapshot.val().bag+" Kgs : "+snapshot.val().kgs;
+              totalInvqty = "Bag : "+data.val().bag+" Kgs : "+data.val().kgs;
+              bagadd=parseInt(snapshot.val().bag);
+              kgsadd=parseInt(snapshot.val().kgs);
+              bagadd=bagadd+parseInt(data.val().bag);
+              kgsadd=kgsadd+parseInt(data.val().kgs);
+              totalqtyInvPO ="Bag : "+bagadd+" Kgs : "+kgsadd;
+              if (companyCheckbox.checked == false && categorycheckBox.checked == false && subcategorycheckBox.checked == false){
+                console.log("2598");
+                add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == false && subcategorycheckBox.checked == false){
+                if($("#companynameInput").val() == data.val().companyname){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == true && subcategorycheckBox.checked == false){
+                if($("#categoriesInput").val() == data.val().category){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == false && subcategorycheckBox.checked == true){
+                if($("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == true && subcategorycheckBox.checked == false){
+                if($("#companynameInput").val() == data.val().companyname && $("#categoriesInput").val() == data.val().category){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == false && subcategorycheckBox.checked == true){
+                if($("#companynameInput").val() == data.val().companyname && $("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == true && subcategorycheckBox.checked == true){
+                  if($("#categoriesInput").val() == data.val().category && $("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == true && subcategorycheckBox.checked == true){
+                  if($("#categoriesInput").val() == data.val().category && $("#subcategoriesInput").val() == data.val().subcategory && $("#companynameInput").val() == data.val().companyname){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+                    });
+          break;
+          case "Case-Cent-Katta":
+        database.ref('purchaseorder/'+itemcodeInv).once("value").then(function(snapshot) {
+              totalPOqty = "Case : "+snapshot.val().case+" Cent : "+snapshot.val().cent+" Katta : "+snapshot.val().katta;
+              caseunitadd=parseInt(snapshot.val().case);
+              kattaadd=parseInt(snapshot.val().katta);
+              centadd=parseInt(snapshot.val().cent);
+              totalInvqty = "Case : "+data.val().case+" Cent : "+data.val().cent+" Katta : "+data.val().katta;
+              caseunitadd=caseunitadd+parseInt(data.val().case);
+              centadd=centadd+parseInt(data.val().cent);
+              kattaadd=kattaadd+parseInt(data.val().katta);
+              totalqtyInvPO ="Case : "+caseunitadd+" Cent : "+centadd+" Katta : "+kattaadd;
+              if (companyCheckbox.checked == false && categorycheckBox.checked == false && subcategorycheckBox.checked == false){
+                console.log("2598");
+                add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == false && subcategorycheckBox.checked == false){
+                if($("#companynameInput").val() == data.val().companyname){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == true && subcategorycheckBox.checked == false){
+                if($("#categoriesInput").val() == data.val().category){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == false && subcategorycheckBox.checked == true){
+                if($("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == true && subcategorycheckBox.checked == false){
+                if($("#companynameInput").val() == data.val().companyname && $("#categoriesInput").val() == data.val().category){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == false && subcategorycheckBox.checked == true){
+                if($("#companynameInput").val() == data.val().companyname && $("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == true && subcategorycheckBox.checked == true){
+                  if($("#categoriesInput").val() == data.val().category && $("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == true && subcategorycheckBox.checked == true){
+                  if($("#categoriesInput").val() == data.val().category && $("#subcategoriesInput").val() == data.val().subcategory && $("#companynameInput").val() == data.val().companyname){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+                   });
+          break;
+        case "Case-Tube":
+        database.ref('purchaseorder/'+itemcodeInv).once("value").then(function(snapshot) {
+              totalPOqty = "Case : "+snapshot.val().case+" Tube : "+snapshot.val().tube;
+              totalInvqty = "Case : "+data.val().case+" Tube : "+data.val().tube;
+              caseunitadd=parseInt(snapshot.val().case);
+              tubeadd=parseInt(snapshot.val().tube);
+              caseunitadd=caseunitadd+parseInt(data.val().case);
+              tubeadd=tubeadd+parseInt(data.val().tube);
+              totalqtyInvPO ="Case : "+caseunitadd+" Tube : "+tubeadd;
+              if (companyCheckbox.checked == false && categorycheckBox.checked == false && subcategorycheckBox.checked == false){
+                console.log("2598");
+                add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == false && subcategorycheckBox.checked == false){
+                if($("#companynameInput").val() == data.val().companyname){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == true && subcategorycheckBox.checked == false){
+                if($("#categoriesInput").val() == data.val().category){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == false && subcategorycheckBox.checked == true){
+                if($("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == true && subcategorycheckBox.checked == false){
+                if($("#companynameInput").val() == data.val().companyname && $("#categoriesInput").val() == data.val().category){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == false && subcategorycheckBox.checked == true){
+                if($("#companynameInput").val() == data.val().companyname && $("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == true && subcategorycheckBox.checked == true){
+                  if($("#categoriesInput").val() == data.val().category && $("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == true && subcategorycheckBox.checked == true){
+                  if($("#categoriesInput").val() == data.val().category && $("#subcategoriesInput").val() == data.val().subcategory && $("#companynameInput").val() == data.val().companyname){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+                   });
+          break;
+        case "Case-Cone":
+        database.ref('purchaseorder/'+itemcodeInv).once("value").then(function(snapshot) {
+              totalPOqty = "Case : "+snapshot.val().case+" Cone : "+snapshot.val().cone;
+              totalInvqty = "Case : "+data.val().case+" Cone : "+data.val().cone;
+              caseunitadd=parseInt(snapshot.val().case);
+              coneadd=parseInt(snapshot.val().cone);
+              caseunitadd=caseunitadd+parseInt(data.val().case);
+              coneadd=coneadd+parseInt(data.val().cone);
+              totalqtyInvPO ="Case : "+caseunitadd+" Cone : "+coneadd;
+              if (companyCheckbox.checked == false && categorycheckBox.checked == false && subcategorycheckBox.checked == false){
+                console.log("2598");
+                add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == false && subcategorycheckBox.checked == false){
+                if($("#companynameInput").val() == data.val().companyname){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == true && subcategorycheckBox.checked == false){
+                if($("#categoriesInput").val() == data.val().category){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == false && subcategorycheckBox.checked == true){
+                if($("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == true && subcategorycheckBox.checked == false){
+                if($("#companynameInput").val() == data.val().companyname && $("#categoriesInput").val() == data.val().category){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == false && subcategorycheckBox.checked == true){
+                if($("#companynameInput").val() == data.val().companyname && $("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == true && subcategorycheckBox.checked == true){
+                  if($("#categoriesInput").val() == data.val().category && $("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == true && subcategorycheckBox.checked == true){
+                  if($("#categoriesInput").val() == data.val().category && $("#subcategoriesInput").val() == data.val().subcategory && $("#companynameInput").val() == data.val().companyname){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+                   });
+          break;
+        case "Bag-Packets":
+        database.ref('purchaseorder/'+itemcodeInv).once("value").then(function(snapshot) {
+              totalPOqty = "Bag : "+snapshot.val().bag+" Packets : "+snapshot.val().packets;
+              totalInvqty = "Bag : "+data.val().bag+" Packets : "+data.val().packets;
+              bagadd=parseInt(snapshot.val().bag);
+              packetsadd=parseInt(snapshot.val().packets);
+              bagadd=bagadd+parseInt(data.val().bag);
+              packetsadd=packetsadd+parseInt(data.val().packets);
+              totalqtyInvPO ="Bag : "+bagadd+" Packets : "+packetsadd;
+              if (companyCheckbox.checked == false && categorycheckBox.checked == false && subcategorycheckBox.checked == false){
+                console.log("2598");
+                add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == false && subcategorycheckBox.checked == false){
+                if($("#companynameInput").val() == data.val().companyname){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == true && subcategorycheckBox.checked == false){
+                if($("#categoriesInput").val() == data.val().category){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == false && subcategorycheckBox.checked == true){
+                if($("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == true && subcategorycheckBox.checked == false){
+                if($("#companynameInput").val() == data.val().companyname && $("#categoriesInput").val() == data.val().category){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == false && subcategorycheckBox.checked == true){
+                if($("#companynameInput").val() == data.val().companyname && $("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == true && subcategorycheckBox.checked == true){
+                  if($("#categoriesInput").val() == data.val().category && $("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == true && subcategorycheckBox.checked == true){
+                  if($("#categoriesInput").val() == data.val().category && $("#subcategoriesInput").val() == data.val().subcategory && $("#companynameInput").val() == data.val().companyname){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+                   });
+          break;
+        case "Bag-Pieces":
+        database.ref('purchaseorder/'+itemcodeInv).once("value").then(function(snapshot) {
+              totalPOqty = "Bag : "+snapshot.val().bag+" Piece : "+snapshot.val().piece;
+              totalInvqty = "Bag : "+data.val().bag+" Piece : "+data.val().piece;
+              bagadd=parseInt(snapshot.val().bag);
+              pieceadd=parseInt(snapshot.val().piece);
+              bagadd=bagadd+parseInt(data.val().bag);
+              pieceadd=packetsadd+parseInt(data.val().piece);
+              totalqtyInvPO ="Bag : "+bagadd+" Piece : "+pieceadd;
+              if (companyCheckbox.checked == false && categorycheckBox.checked == false && subcategorycheckBox.checked == false){
+                console.log("2598");
+                add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == false && subcategorycheckBox.checked == false){
+                if($("#companynameInput").val() == data.val().companyname){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == true && subcategorycheckBox.checked == false){
+                if($("#categoriesInput").val() == data.val().category){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == false && subcategorycheckBox.checked == true){
+                if($("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == true && subcategorycheckBox.checked == false){
+                if($("#companynameInput").val() == data.val().companyname && $("#categoriesInput").val() == data.val().category){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == false && subcategorycheckBox.checked == true){
+                if($("#companynameInput").val() == data.val().companyname && $("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == false && categorycheckBox.checked == true && subcategorycheckBox.checked == true){
+                  if($("#categoriesInput").val() == data.val().category && $("#subcategoriesInput").val() == data.val().subcategory){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+              else if (companyCheckbox.checked == true && categorycheckBox.checked == true && subcategorycheckBox.checked == true){
+                  if($("#categoriesInput").val() == data.val().category && $("#subcategoriesInput").val() == data.val().subcategory && $("#companynameInput").val() == data.val().companyname){
+                  add_invAndPOView_data_table(data.val().itemcode,data.val().name,data.val().companyname,data.val().category,data.val().subcategory,totalInvqty,totalPOqty,totalqtyInvPO);
+                }
+              }
+                    });
+          break;
+        default:
+          console.log("No package found");
+      }
 
 
-});
+  });
+}
+
 function add_invAndPOView_data_table(itemcode,productName,Company,Category,SubCategory,qtyInv,qtyPO,qtyInvPO){
   $("#viewInventoryTable").prepend('<tr id="' + itemcode + '"><th>' + itemcode + '</th><th>' + productName + '</th><th>' + Company + '</th><th>' + Category + '</th><th>' + SubCategory + '</th><th>' + qtyInv + '</th><th>' + qtyPO + '</th><th>' + qtyInvPO + '</th></tr>');
 }
 /* View Inventory Logic ends here */
-//2662 editng
