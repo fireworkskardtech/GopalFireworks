@@ -271,6 +271,7 @@ var subcategoryarray = [];
 var companynames = [];
 var itemcodes = [];
 var customerNumbers = [];
+var workersID = [];
 var currentunitconfig = "";
 function showcategorydata(name, type) {
   if (type == "Category") {
@@ -294,6 +295,14 @@ function showcompanyname(name) {
   for(var i = 0; i < companynames.length; i++)
   options += '<option value="'+companynames[i]+'" />';
   document.getElementById('companydatalist').innerHTML = options;
+}
+function showworkerid(id) {
+  workersID.push(id);
+  var options = '';
+  for(var i = 0; i < workersID.length; i++){
+  options += '<option value="'+workersID[i].split("|")[0]+'" >'+workersID[i]+'</option>';
+}
+  document.getElementById('workeridlist').innerHTML = options;
 }
 function showcustomernumber(name) {
   customerNumbers.push(name);
@@ -325,6 +334,10 @@ database.ref('sellers').on('child_added', function(data) {
 //Add values to customers array
 database.ref('customers').on('child_added', function(data) {
   showcustomernumber(data.val().phonenumber+'|'+data.val().customername);
+});
+//Add values to workerid array
+database.ref('workers').on('child_added', function(data) {
+  showworkerid(data.val().id+'|'+data.val().name);
 });
 //Add values to itemcode array
 database.ref('products').on('child_added', function(data) {
@@ -1517,19 +1530,7 @@ function update_item_product_data_table(itemcode, name, qty, last_added) {
 
 }
 /**Add items to Inventory ends here**/
-/* Estimate billing starts here* */
-function returnCustDetails() {
-  var custnumber = $("#customerMobileNumber").val();
-  console.log(custnumber + " custnumber");
-  database.ref('customers/' + custnumber).once("value").then(function(data) {
-    $('#customerName').html(data.val().customername);
-    $('#customerEmailID').html(data.val().email);
-    $('#customerPhoneNumber').html(data.val().phonenumber);
-    $('#customerAddress').html(data.val().address);
-  });
-}
 
-/** estimate billing ends here*/
 /** Print area**/
 function printDiv(divName) {
   var printContents = '<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><link rel=\"stylesheet\" href=\"style.css\" type=\"text/css\" media=\"print\"/>' + document.getElementById(divName).innerHTML;
@@ -3109,3 +3110,79 @@ function add_invAndPOView_data_table(itemcode,productName,Company,Category,SubCa
   $("#viewInventoryTable").prepend('<tr id="' + itemcode + '"><th>' + itemcode + '</th><th>' + productName + '</th><th>' + Company + '</th><th>' + Category + '</th><th>' + SubCategory + '</th><th>' + qtyInv + '</th><th>' + qtyPO + '</th><th>' + qtyInvPO + '</th></tr>');
 }
 /* View Inventory Logic ends here */
+/*Worker Logic starts here*/
+database.ref('workers').on('child_added', function(data) {
+  add_worker_data_table(data.val().name, data.val().id);
+});
+database.ref('workers').on('child_changed', function(data) {
+  update_worker_data_table(data.val().name, data.val().id);
+});
+database.ref('workers').on('child_removed', function(data) {
+  remove_worker_data_table(data.key)
+});
+function add_worker_data_table(name, id) {
+  $("#Worcustable").prepend('<tr id="' + id + '"><th>' + name + '</th><th>' + id + '</th><th><a href="#" data-key="' + id + '" class="card-footer-item btnWorEdit">Edit</a></th><th><a href="#" class="card-footer-item btnWorRemove"  data-key="' + id + '">Remove</a></th></tr>');
+}
+function update_worker_data_table(name, id) {
+  $("#Worcustable #" + id).html('<th>' + name + '</th><th>' + id + '</th><th><a href="#" data-key="' + id + '" class="card-footer-item btnWorEdit">Edit</a></th><th><a href="#" class="card-footer-item btnWorRemove"  data-key="' + id + '">Remove</a></th>');
+}
+function remove_worker_data_table(id) {
+  $("#Worcustable #" + id).remove();
+}
+function new_worker_data(name, id) {
+  database.ref('workers/' + id).set({name: name, id: id});
+  $("#txtWorname").val("");
+   $("#txtWorID").val("");
+}
+function update_worker_data(name, id) {
+  database.ref('workers/' + id).update({name: name, id: id});
+  $("#txtWorname").val("");
+   $("#txtWorID").val("");
+}
+$("#btnWorSave").click(function() {
+  if ($("#txtType").val() == 'N') {
+    database.ref('workers').once("value").then(function(snapshot) {
+
+      new_worker_data($("#txtWorname").val(), $("#txtWorID").val());
+    });
+  } else {
+    update_worker_data($("#txtWorname").val(), $("#txtWorID").val());
+    //window.location.reload();
+  }
+});
+$(document).on("click", ".btnWorEdit", function(event) {
+  event.preventDefault();
+  key = $(this).attr("data-key");
+  console.log("key is " + key);
+  database.ref('workers/' + key).once("value").then(function(snapshot) {
+    $("#txtWorname").val(snapshot.val().name);
+    $("#txtWorID").val(snapshot.val().id);
+  });
+});
+$(document).on("click", ".btnWorRemove", function(event) {
+  event.preventDefault();
+  key = $(this).attr("data-key");
+  database.ref('workers/' + key).remove();
+})
+/*Worker logic ends here*/
+/* Estimate billing starts here* */
+function returnCustDetails() {
+  var custnumber = $("#customerMobileNumber").val();
+  var workerID = $("#workerID").val();
+  console.log(custnumber + " custnumber");
+  database.ref('customers/' + custnumber).once("value").then(function(data) {
+    $('#customerName').html(data.val().customername);
+    $('#customerPhoneNumber').html(data.val().phonenumber);
+    $('#customerAddress').html(data.val().address);
+  });
+  $('#dateestimate').html('Date : '+$('#today').val());
+  database.ref('workers/' + workerID).once("value").then(function(data) {
+    $('#workerDetails').html("Billed By "+data.val().name);
+  });
+}
+database.ref('estimatebillnumber').once("value").then(function(snapshot) {
+console.log(snapshot.val()+" snap");
+$('#billnumberestimate').html("Bill : "+(new Date()).getFullYear()+""+parseInt(snapshot.val()));
+});
+
+/** estimate billing ends here*/

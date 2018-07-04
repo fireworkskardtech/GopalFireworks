@@ -78,12 +78,12 @@
                           <option value="Company-Category-SubCategory">Company-Category-SubCategory</option>
                           <option value="Category-SubCategory">Category-SubCategory</option>
                         </select>-->
-                        Company: <input type="checkbox" id="companyCheckbox" onclick="showCompanyInput()"/>
+                        Company: <input type="checkbox" id="companyCheckbox" onclick="showCompanyInput()">
                         Category: <input type="checkbox" id="categoryCheckbox" onclick="showCategoryInput()"/>
                         Sub-Category: <input type="checkbox" id="subCategoryCheckbox" onclick="showSubCategoryInput()"/>
-                        <div id="companyDIV"  style="display:none;">Company Name : <input id="companynameInput" type="text" name="companyname" placeholder="Company Name" /></div>
-                        <div id="categoryDIV" style="display:none;">Category : <input id="categoriesInput" type="text" name="categories" placeholder="Categories"/></div>
-                        <div id="subCategoryDIV" style="display:none;">Sub-Category : <input id="subcategoriesInput" type="text" name="subcategories" placeholder="Sub-categories"/></div>
+                        <div id="companyDIV"  style="display:none;">Company Name : <input id="companynameInput" list="companydatalist" type="text" name="companyname" placeholder="Company Name"><datalist id="companydatalist"></datalist></div>
+                        <div id="categoryDIV" style="display:none;">Category : <input id="categoriesInput" list="categorieslist" type="text" name="categories" placeholder="Categories"/></div><datalist id="categorieslist"></datalist>
+                        <div id="subCategoryDIV" style="display:none;">Sub-Category : <input id="subcategoriesInput" list="subcategorieslist" type="text" name="subcategories" placeholder="Sub-categories"/></div><datalist id="subcategorieslist"></datalist>
                         <button id="btnShowInvData" class="button is-success" onclick="viewInventoryTable()">Show Data</button>
                       <div><br/><br/>
                         <table id="viewInventoryTable" class="pure-table pure-table-bordered datatable">
