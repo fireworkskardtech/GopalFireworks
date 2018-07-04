@@ -450,15 +450,22 @@ $(document).on("click", ".btnCatRemove", function(event) {
 })
 /********Add products logic****/
 database.ref('products').on('child_added', function(data) {
+  var rate = parseInt(data.val().price);
+  var wholesalepercent = parseInt(data.val().wholesalepercent);
+  var semiwholesalepercent = parseInt(data.val().semiwholesalepercent);
+  var retailpercent = parseInt(data.val().retailpercent);
+  var wholesalerate = (wholesalepercent*rate)/100;
+  var semiwholesalerate = (semiwholesalepercent*rate)/100;
+  var retailrate = (retailpercent*rate)/100;
   add_products_data_table(data.val().name, data.val().itemcode, data.val().companyname, data.val().category, data.val().subcategory, data.val().unit, data.val().comment);
+  add_pricelist_data_table(data.val().name, data.val().itemcode, rate, wholesalerate, semiwholesalerate, retailrate);
 });
 database.ref('products').on('child_changed', function(data) {
   update_products_data_table(data.val().name, data.val().itemcode, data.val().companyname, data.val().category, data.val().subcategory, data.val().unit, data.val().comment);
   updateConfigProductTableInstantly(data);
-
 });
 database.ref('products').on('child_removed', function(data) {
-  remove_products_data_table(data.key)
+  remove_products_data_table(data.key);
 });
 function add_products_data_table(name, itemcode, companyname, category, subcategory, unit, comment) {
   $("#ProductTable").prepend('<tr id="' + itemcode + '"><th>' + name + '</th><th>' + itemcode + '</th><th>' + companyname + '</th><th>' + category + '</th><th>' + subcategory + '</th><th>' + unit + '</th><th>' + comment + '</th><th><a href="#" data-key="' + itemcode + '" class="card-footer-item btnProductEdit">Edit</a></th><th><a href="#" class="card-footer-item btnProductRemove"  data-key="' + itemcode + '">Remove</a></th></tr>');
@@ -3184,5 +3191,13 @@ database.ref('estimatebillnumber').once("value").then(function(snapshot) {
 console.log(snapshot.val()+" snap");
 $('#billnumberestimate').html("Bill : "+(new Date()).getFullYear()+""+parseInt(snapshot.val()));
 });
-
+function add_pricelist_data_table(name, itemcode, rate, wholesalepercent, semiwholesalepercent, retailpercent) {
+  $("#viewPricelistTable").prepend('<tr id="' + itemcode + '"><th>' + itemcode + '</th><th>' + name + '</th><th>' + rate + '</th><th>' + wholesalepercent + '</th><th>' + semiwholesalepercent + '</th><th>' + retailpercent + '</th></tr>');
+}
+function update_pricelist_data_table(name, itemcode, rate, wholesalepercent, semiwholesalepercent, retailpercent) {
+  $("#viewPricelistTable #" + itemcode).html('<th>' + itemcode + '</th><th>' + name + '</th><th>' + rate + '</th><th>' + wholesalepercent + '</th><th>' + semiwholesalepercent + '</th><th>' + retailpercent + '</th>');
+}
+function remove_pricelist_data_table(itemcode) {
+  $("#viewPricelistTable #" + itemcode).remove();
+}
 /** estimate billing ends here*/

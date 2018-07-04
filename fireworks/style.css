@@ -210,3 +210,7 @@ input {
   float:right;
   padding-right:0;
 }
+#page-content-wrapper{
+  padding-top: 30px;
+}
+/* in tests*/
