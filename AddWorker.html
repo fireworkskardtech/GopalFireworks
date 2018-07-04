@@ -4,6 +4,9 @@
   <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
   <script src="sorttable.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
   <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
   <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/all.js"></script>
 </head>
@@ -69,10 +72,12 @@
 
                         </div>
                         <div>
-                          <div class="inputs">
-                      <input class="input" id="txtWorname" type="text" placeholder="Name">
-                      <input class="input" id="txtWorID" type="text" placeholder="ID">
-                      <button id="btnWorSave" class="button is-success">Save changes</button></div>
+                          
+                          <div class="row">
+                      <div class="col-sm-3"><label>Name</label><input class="w3-input" id="txtWorname" type="text" placeholder="Name"></div>
+                      <div class="col-sm-3"><label>ID</label><input class="w3-input" id="txtWorID" type="text" placeholder="ID"></div>
+                      <div class="col-sm-3"><button id="btnWorSave" class="button is-success">Save changes</button></div>
+                    </div>
                           <div>
 
                       </section>
