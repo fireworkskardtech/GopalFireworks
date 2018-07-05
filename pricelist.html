@@ -5,13 +5,15 @@
   <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
   <script src="sorttable.js"></script>
+  <!-- jQuery -->
+<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
   <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
   <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
   <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/all.js"></script>
 </head>
 
-<body background="crack.jpg">
+<body background="crack.jpg" onload ="getpriceListType()">
 
   <div id="login_div" class="main-div col-lg-4">
     <h3>Fireworks Login</h3>
@@ -75,25 +77,27 @@
                         <h1 class="title">Pricelist</h1>
 
                       </div>
-                      <div>
+                      <div id="companyDIV">Company Name : <input id="companynameInput" list="companydatalist" type="text" value="NA" name="companyname" placeholder="Company Name"><datalist id="companydatalist"></datalist></div>
+                      <div id="categoryDIV">Category : <input id="categoriesInput" list="categorieslist" type="text" value="NA" name="categories" placeholder="Categories"/></div><datalist id="categorieslist"></datalist>
+                      <div id="subCategoryDIV">Sub-Category : <input id="subcategoriesInput" list="subcategorieslist" value="NA" type="text" name="subcategories" placeholder="Sub-categories"/></div><datalist id="subcategorieslist"></datalist>
                         <table id="checkboxes">
-                    <form action="" method="post">
-                        <tr>
-                            <td><input type="checkbox" data-id="3" name="option1" value="eventid" />Show Rate</td>
+                            <form action="" method="post">
+                            <tr>
+                              <td><input type="checkbox" data-id="3" name="option1" value="eventid" />Show Rate</td>
+                            </tr>
+                          </form>
+                        </table>
+                      <button id="btnShowPLData" class="button is-success" onclick="viewPriceListTable()">Show Data</button>
+                      </div>
+                      <div>
 
-						</tr>
-
-					</form>
-                </table>
                         <table id="viewPricelistTable" class="pure-table pure-table-bordered datatable">
                           <thead>
                             <tr>
                               <th>Item Code</th>
                               <th>Product Name</th>
                               <th data-resizable-column-id="Rate" data-sort="int" class="option1">Rate</th>
-                              <th>Wholesale Rate</th>
-                              <th>Semi-Wholesale Rate</th>
-                              <th>Retail Rate</th>
+                              <th>Price</th>
                             </tr>
                           </thead>
                           <tbody>
@@ -127,6 +131,7 @@
 
 });
   </script>
+
 </body>
 
 </html>

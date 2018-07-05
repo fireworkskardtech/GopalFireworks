@@ -450,15 +450,9 @@ $(document).on("click", ".btnCatRemove", function(event) {
 })
 /********Add products logic****/
 database.ref('products').on('child_added', function(data) {
-  var rate = parseInt(data.val().price);
-  var wholesalepercent = parseInt(data.val().wholesalepercent);
-  var semiwholesalepercent = parseInt(data.val().semiwholesalepercent);
-  var retailpercent = parseInt(data.val().retailpercent);
-  var wholesalerate = (wholesalepercent*rate)/100;
-  var semiwholesalerate = (semiwholesalepercent*rate)/100;
-  var retailrate = (retailpercent*rate)/100;
+
   add_products_data_table(data.val().name, data.val().itemcode, data.val().companyname, data.val().category, data.val().subcategory, data.val().unit, data.val().comment);
-  add_pricelist_data_table(data.val().name, data.val().itemcode, rate, wholesalerate, semiwholesalerate, retailrate);
+
 });
 database.ref('products').on('child_changed', function(data) {
   update_products_data_table(data.val().name, data.val().itemcode, data.val().companyname, data.val().category, data.val().subcategory, data.val().unit, data.val().comment);
@@ -3108,8 +3102,6 @@ function viewInventoryTable(){
         default:
           console.log("No package found");
       }
-
-
   });
 }
 
@@ -3172,6 +3164,16 @@ $(document).on("click", ".btnWorRemove", function(event) {
   database.ref('workers/' + key).remove();
 })
 /*Worker logic ends here*/
+/*pricelist functions */
+function add_pricelist_data_table(name, itemcode, rate, Custprice) {
+  $("#viewPricelistTable").prepend('<tr id="' + itemcode + '"><th>' + itemcode + '</th><th>' + name + '</th><th>' + rate + '</th><th>' + Custprice + '</th></tr>');
+}
+function update_pricelist_data_table(name, itemcode, rate, Custprice) {
+  $("#viewPricelistTable #" + itemcode).html('<th>' + itemcode + '</th><th>' + name + '</th><th>' + rate + '</th><th>' + Custprice + '</th>');
+}
+function remove_pricelist_data_table(itemcode) {
+  $("#viewPricelistTable #" + itemcode).remove();
+}
 /* Estimate billing starts here* */
 function returnCustDetails() {
   var custnumber = $("#customerMobileNumber").val();
@@ -3186,18 +3188,208 @@ function returnCustDetails() {
   database.ref('workers/' + workerID).once("value").then(function(data) {
     $('#workerDetails').html("Billed By "+data.val().name);
   });
+  database.ref('estimatebillnumber').once("value").then(function(snapshot) {
+  console.log(snapshot.val()+" snap");
+  $('#billnumberestimate').html("Bill : "+(new Date()).getFullYear()+""+parseInt(snapshot.val()));
+  });
 }
-database.ref('estimatebillnumber').once("value").then(function(snapshot) {
-console.log(snapshot.val()+" snap");
-$('#billnumberestimate').html("Bill : "+(new Date()).getFullYear()+""+parseInt(snapshot.val()));
-});
-function add_pricelist_data_table(name, itemcode, rate, wholesalepercent, semiwholesalepercent, retailpercent) {
-  $("#viewPricelistTable").prepend('<tr id="' + itemcode + '"><th>' + itemcode + '</th><th>' + name + '</th><th>' + rate + '</th><th>' + wholesalepercent + '</th><th>' + semiwholesalepercent + '</th><th>' + retailpercent + '</th></tr>');
-}
-function update_pricelist_data_table(name, itemcode, rate, wholesalepercent, semiwholesalepercent, retailpercent) {
-  $("#viewPricelistTable #" + itemcode).html('<th>' + itemcode + '</th><th>' + name + '</th><th>' + rate + '</th><th>' + wholesalepercent + '</th><th>' + semiwholesalepercent + '</th><th>' + retailpercent + '</th>');
-}
-function remove_pricelist_data_table(itemcode) {
-  $("#viewPricelistTable #" + itemcode).remove();
+
+function returnCurrentEstimateUnit() {
+  $('#showunitsdiv').empty();
+    var itemcode = $("#itemcode").val();
+    database.ref('products/'+itemcode).once("value").then(function(data) {
+      $('#productname').val(data.val().name);
+      console.log("3208 "+data.val().unit);
+      getunitconfig(data.val().unit);
+      currentunitconfig=data.val().unit;
+      if (currentunitconfig == "Case-Tin") {
+
+    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/><br/> Tin: <input id="tin" type="text" placeholder="Tin"/>');
+  } else if (currentunitconfig == "Case-Piece") {
+
+    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/><br/> Piece: <input id="piece" type="text" placeholder="Piece"/>');
+  } else if (currentunitconfig == "Case-Box-Piece") {
+
+    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/><br/> Box: <input id="box"  type="text" placeholder="Box"/><br/> Piece: <input id="piece" type="text" value ="0" placeholder="Piece"/>');
+  } else if (currentunitconfig == "Case-Packets") {
+
+    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/><br/> Packets: <input id="packets" type="text" placeholder="Packets"/>');
+  } else if (currentunitconfig == "Bundle-Katta-Boxes") {
+
+    $("#showunitsdiv").append('Bundle: <input id="bundle" type="text" placeholder="Bundle"/> <br/>Katta: <input id="katta" type="text" placeholder="Katta"/><br/>Box: <input id="box" type="text" value ="0" placeholder="Box"/>');
+  } else if (currentunitconfig == "Bundle-Boxes") {
+
+    $("#showunitsdiv").append('Bundle: <input id="bundle" type="text" placeholder="Bundle"/><br/> Box: <input id="box" type="text" placeholder="Box"/>');
+  } else if (currentunitconfig == "Bag-Kgs") {
+
+    $("#showunitsdiv").append('Bag: <input id="bag" type="text" placeholder="Bag"/><br/> Kgs: <input id="kgs" type="text" placeholder="Kgs"/>');
+  } else if (currentunitconfig == "Case-Cent-Katta") {
+
+    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/><br/> Cent: <input id="cent" type="text" placeholder="Cent"/><br/> Katta: <input id="katta" type="text" value ="0" placeholder="Katta"/>');
+  } else if (currentunitconfig == "Case-Tube") {
+
+    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/><br/> Tube: <input id="tube" type="text" placeholder="Tube"/>');
+  } else if (currentunitconfig == "Case-Cone") {
+
+    $("#showunitsdiv").append('Case: <input id="case" type="text" placeholder="Case"/><br/> Cone: <input id="cone" type="text" placeholder="Cone"/>');
+  } else if (currentunitconfig == "Bag-Pieces") {
+
+    $("#showunitsdiv").append('Bag: <input id="bag" type="text" placeholder="Bag"/> <br/>Piece: <input id="piece" type="text" placeholder="Piece"/>');
+  } else if (currentunitconfig == "Bag-Packets") {
+
+    $("#showunitsdiv").append('Bag: <input id="bag" type="text" placeholder="Bag"/><br/> Packets: <input id="packets" type="text" placeholder="Packets"/>');
+  } else {
+    console.log("3248 "+currentunitconfig);
+    $("#showunitsdiv").append('<h1>Issue in selection</h1>');
+  }
+      $('#productpriceEstimate').val(data.val().price);
+      console.log($("#itemcode").val() + " " + currentunitconfig);
+  });
 }
 /** estimate billing ends here*/
+var pricelistType="";
+function getpriceListType() {
+    pricelistType = prompt("Enter Code", "001");
+    if (pricelistType != null) {
+        console.log("3262 pricelist type "+pricelistType);
+    }
+}
+function viewPriceListTable(){
+  $("#viewPricelistTable").find("tr:gt(0)").remove();
+  var companyName = $("#companynameInput").val();
+  var categoryName = $("#categoriesInput").val();
+  var subcategoryName = $("#subcategoriesInput").val();
+  if(companyName=="NA" && categoryName=="NA" && subcategoryName == "NA" && pricelistType =="003"){
+    if (confirm("Please enter all fields")) {
+      $("#companynameInput").val("NA");
+    } else {
+    }
+  }
+  if(companyName=="NA" && categoryName=="NA" && subcategoryName == "NA" && pricelistType =="002"){
+    if (confirm("Please enter all fields")) {
+      $("#companynameInput").val("NA");
+    } else {
+    }
+  }
+  if(companyName=="NA" && categoryName=="NA" && subcategoryName == "NA" && pricelistType =="001"){
+    if (confirm("Please enter all fields")) {
+      $("#companynameInput").val("NA");
+    } else {
+    }
+  }
+  database.ref('products').on('child_added', function(data) {
+    var rate = parseInt(data.val().price);
+    var wholesalepercent = parseInt(data.val().wholesalepercent);
+    var semiwholesalepercent = parseInt(data.val().semiwholesalepercent);
+    var retailpercent = parseInt(data.val().retailpercent);
+    var wholesalerate = rate+(wholesalepercent*rate)/100;
+    var semiwholesalerate = rate+(semiwholesalepercent*rate)/100;
+    var retailrate = rate+(retailpercent*rate)/100;
+    if(pricelistType=="001"){
+      //1
+      if(companyName!="NA" && categoryName!="NA" && subcategoryName != "NA"){
+          if((companyName == data.val().companyname) && (categoryName == data.val().category) && (subcategoryName == data.val().subcategory)){
+            add_pricelist_data_table(data.val().name, data.val().itemcode, rate, wholesalerate);
+          }
+
+      }
+      //2
+      else if(companyName!="NA" && categoryName=="NA" && subcategoryName == "NA"){
+          if(companyName == data.val().companyname){
+            add_pricelist_data_table(data.val().name, data.val().itemcode, rate, wholesalerate);
+          }
+
+      }
+      //3
+      else if(companyName!="NA" && categoryName!="NA" && subcategoryName == "NA"){
+          if((companyName == data.val().companyname) && (categoryName == data.val().category) ){
+            add_pricelist_data_table(data.val().name, data.val().itemcode, rate, wholesalerate);
+          }
+      }
+      //4
+      else if(companyName!="NA" && categoryName=="NA" && subcategoryName != "NA"){
+          if((companyName == data.val().companyname) && (subcategoryName == data.val().subcategory) ){
+            add_pricelist_data_table(data.val().name, data.val().itemcode, rate, wholesalerate);
+          }
+      }
+      //5
+      else if(companyName=="NA" && categoryName!="NA" && subcategoryName == "NA"){
+        if((categoryName == data.val().category)){
+          add_pricelist_data_table(data.val().name, data.val().itemcode, rate, wholesalerate);
+        }
+      }
+      //6
+      else if(companyName=="NA" && categoryName!="NA" && subcategoryName != "NA"){
+          if((categoryName == data.val().category) && (subcategoryName == data.val().subcategory) ){
+            add_pricelist_data_table(data.val().name, data.val().itemcode, rate, wholesalerate);
+          }
+      }
+      //7
+      else if(companyName=="NA" && categoryName=="NA" && subcategoryName != "NA"){
+        if((subcategoryName == data.val().subcategory)){
+          add_pricelist_data_table(data.val().name, data.val().itemcode, rate, wholesalerate);
+        }
+      }
+    }
+    else if(pricelistType=="002"){
+      //1
+      if(companyName!="NA" && categoryName!="NA" && subcategoryName != "NA"){
+          if((companyName == data.val().companyname) && (categoryName == data.val().category) && (subcategoryName == data.val().subcategory)){
+            add_pricelist_data_table(data.val().name, data.val().itemcode, rate, semiwholesalerate);
+          }
+
+      }
+      //2
+      else if(companyName!="NA" && categoryName=="NA" && subcategoryName == "NA"){
+          if(companyName == data.val().companyname){
+            add_pricelist_data_table(data.val().name, data.val().itemcode, rate, semiwholesalerate);
+          }
+
+      }
+      //3
+      else if(companyName!="NA" && categoryName!="NA" && subcategoryName == "NA"){
+          if((companyName == data.val().companyname) && (categoryName == data.val().category) ){
+            add_pricelist_data_table(data.val().name, data.val().itemcode, rate, semiwholesalerate);
+          }
+      }
+      //4
+      else if(companyName!="NA" && categoryName=="NA" && subcategoryName != "NA"){
+          if((companyName == data.val().companyname) && (subcategoryName == data.val().subcategory) ){
+            add_pricelist_data_table(data.val().name, data.val().itemcode, rate, semiwholesalerate);
+          }
+      }
+      //5
+      else if(companyName=="NA" && categoryName!="NA" && subcategoryName == "NA"){
+        if((categoryName == data.val().category)){
+          add_pricelist_data_table(data.val().name, data.val().itemcode, rate, semiwholesalerate);
+        }
+      }
+      //6
+      else if(companyName=="NA" && categoryName!="NA" && subcategoryName != "NA"){
+          if((categoryName == data.val().category) && (subcategoryName == data.val().subcategory) ){
+            add_pricelist_data_table(data.val().name, data.val().itemcode, rate, semiwholesalerate);
+          }
+      }
+      //7
+      else if(companyName=="NA" && categoryName=="NA" && subcategoryName != "NA"){
+        if((subcategoryName == data.val().subcategory)){
+          add_pricelist_data_table(data.val().name, data.val().itemcode, rate, semiwholesalerate);
+        }
+      }
+
+    }
+    else if(pricelistType=="003"){
+      /*if(companyName!="NA" && categoryName!="NA" && subcategoryName != "NA"){
+          add_pricelist_data_table(data.val().name, data.val().itemcode, rate, retailrate);
+      }
+      */
+      if(companyName=="NA" || categoryName=="NA" || subcategoryName == "NA"){
+
+      }
+      else{
+        add_pricelist_data_table(data.val().name, data.val().itemcode, rate, retailrate);
+      }
+    }
+
+  });
+}
