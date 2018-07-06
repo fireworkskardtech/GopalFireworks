@@ -90,9 +90,8 @@
                                           Customer Number: <input id="customerMobileNumber" type="text" list="customernumberlist" name="customerMobileNumber" placeholder="Customer Number"><datalist id="customernumberlist"></datalist><button id="btnGetCustUnits" class="button is-success" onclick="returnCustDetails()">Tag to bill</button><br/>
                                           Item code: <input id="itemcode" type="text" list="itemcodelist" name="itemcode" placeholder="Item Code"><datalist id="itemcodelist"></datalist><button id="btnGetUnits" class="button is-success" onclick="returnCurrentEstimateUnit()">Get Units</button><br/>Product Name: <input id="productname" type="text" name="productname" placeholder="Product Name" readonly/><br/>
                                           <div id="showunitsdiv"></div>
-                                          Quantity <input id="quantityEstimate" type="text" name="quantityEstimate" placeholder="Quantity"/><br/>
+                                          <input id="quantityEstimate" type="hidden" name="quantityEstimate" placeholder="Quantity"/>
                                           Price: Rs<input id="productpriceEstimate" type="text" name="productpriceEstimate" placeholder="Price"/>/- <br/>
-
                                           <button id="btnEstimateSave" class="button is-success">Add item to Bill</button>
                                           <button id="btnGenerateBill">Generate Bill</button>
                                           <button onclick="printDiv('estimateprintview')">Print Bill</button></div>

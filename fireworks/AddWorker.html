@@ -1,8 +1,14 @@
 <html>
 <head>
-  <title>Fireworks Login</title>
+  <title>Categories</title>
   <link href="https://fonts.googleapis.com/css?family=Nunito:400,600,700" rel="stylesheet">
   <link rel="stylesheet" href="style.css" />
+  <script src="sorttable.js"></script>
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
+  <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>
+  <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+  <link rel="stylesheet" href="https://unpkg.com/purecss@1.0.0/build/pure-min.css" integrity="sha384-nn4HPE8lTHyVtfCBi5yW9d20FjT8BJwUXyWZT9InLYax14RDjBj46LmSztkmNP9w" crossorigin="anonymous">
+  <script defer src="https://use.fontawesome.com/releases/v5.0.0/js/all.js"></script>
 </head>
 <body background= "crack.jpg">
 
@@ -57,9 +63,42 @@
             <div class="container-fluid">
                 <div class="row">
                     <div class="col-lg-12">
+                      <section class="section">
+                        <div class="container">
+                          <h1 class="title">
+                            Add Workers
+                          </h1>
 
-                        <!--<a href="#menu-toggle" class="btn btn-default" id="menu-toggle">Toggle Menu</a>-->
-						<div id="main"></div>
+
+                        </div>
+                        <div>
+                          
+                          <div class="row">
+                      <div class="col-sm-3"><label>Name</label><input class="w3-input" id="txtWorname" type="text" placeholder="Name"></div>
+                      <div class="col-sm-3"><label>ID</label><input class="w3-input" id="txtWorID" type="text" placeholder="ID"></div>
+                      <div class="col-sm-3"><button id="btnWorSave" class="button is-success">Save changes</button></div>
+                    </div>
+                          <div>
+
+                      </section>
+
+                      <section class="section1">
+
+                          <table id="Worcustable" class="pure-table pure-table-bordered datatable">
+                            <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>User Code</th>
+                        <th>Edit</th>
+                        <th>Remove</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      </table>
+
+
+                      </section>
+
                     </div>
                 </div>
             </div>
@@ -74,22 +113,12 @@
 <script src="https://code.jquery.com/jquery-2.2.4.min.js"
 	integrity="sha256-BbhdlvQf/xTY9gja0Dq3HiwQF8LaCRTXxZKRutelT44="
 	crossorigin="anonymous"></script>
-<!--<script>
-  // Initialize Firebase
-  var config = {
-    apiKey: "AIzaSyBuBrpKvwMMnMJWjGf4UsJFZPYGaiVm250",
-    authDomain: "fir-js-13ecc.firebaseapp.com",
-    databaseURL: "https://fir-js-13ecc.firebaseio.com",
-    projectId: "fir-js-13ecc",
-    storageBucket: "fir-js-13ecc.appspot.com",
-    messagingSenderId: "218732343795"
-  };
-  firebase.initializeApp(config);
-</script>-->
+
 
 </script>
 
   <script src="index.js"></script>
+
 
 </body>
 </html>
