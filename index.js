@@ -1,4 +1,6 @@
 //all package types variables
+var estimateBillRate=0;
+var productName="test",qtyE="test",typeE="test",rateE="test",amountE="test";
 var caseunitadd = 0,
   boxadd = 0,
   pieceadd = 0,
@@ -3402,19 +3404,57 @@ function returnCurrentEstimateUnit() {
 $("#btnEstimateSave").click(function() {
   console.log("3403 current unit is "+currentunitconfig);
 var estimatebillNumber=(new Date()).getFullYear()+""+billnum-1;
-database.ref('products/'+$("#itemcode").val()).once("value").then(function(data) {
+var itemcodeEst=$("#itemcode").val();
+database.ref('products/'+itemcodeEst).once("value").then(function(data) {
+  productName=data.val().name;
   var onecase=data.val().case;
-  var oneCaseHasBoxes=data.val().box;
-  var oneBoxHasPieces=data.val().piece;
+  var oneCaseHasBoxes=parseInt(data.val().box);
+  var oneBoxHasPieces=parseInt(data.val().piece);
   var oneCaseHasPiece=oneCaseHasBoxes*oneBoxHasPieces;
-  var priceOfOnePiece=$("#productpriceEstimate").val();
+  var priceOfOnePiece=parseInt($("#productpriceEstimate").val());
   var priceOfOneBox=oneBoxHasPieces*priceOfOnePiece;
   var priceOfOneCase=oneCaseHasPiece*priceOfOnePiece;
-  var orderedCase=$("#case").val();
-  var orderedBox=$("#box").val();
-  var orderedPiece=$("#piece").val();
+  var orderedCase=parseInt($("#case").val());
+  var orderedBox=parseInt($("#box").val());
+  var orderedPiece=parseInt($("#piece").val());
+  var orderedCaseinPiece=orderedCase*oneCaseHasPiece;
+  var orderedBoxinPiece=orderedBox*oneBoxHasPieces;
+  var quantityOrdered= orderedCaseinPiece+orderedBoxinPiece+orderedPiece;
+  console.log("qty ordered is c*p "+orderedCase*oneCaseHasPiece+"\nb*p "+orderedBox*oneBoxHasPieces+"\np "+orderedPiece+"\nqtyOrdered "+quantityOrdered);
+  var orderItemPrice = quantityOrdered*priceOfOnePiece;
+  estimateBillRate=estimateBillRate+orderItemPrice;
+  database.ref('estimateBill/' + estimatebillNumber+'/'+itemcodeEst).set({
+    caseOrdered:orderedCase,
+    boxOrdered:orderedBox,
+    pieceOrdered:orderedPiece,
+    quantityOrdered:orderedPiece,
+    itemcode:itemcodeEst,
+    orderItemPrice:orderItemPrice,
+    name:productName
+  });
+  database.ref('estimateBill/' + estimatebillNumber).update({
+    totalBillRate:estimateBillRate
+  });
+  typeE="Piece";
   console.log(onecase+" case has "+oneCaseHasBoxes+" boxes \none box has "+oneBoxHasPieces+" pieces \none case has "+oneCaseHasPiece+" pieces");
   console.log("Price of one piece is "+priceOfOnePiece+"\nPrice of one box "+priceOfOneBox+"\nPrice of one case is "+priceOfOneCase);
+add_item_to_estimate_table(itemcodeEst,productName,quantityOrdered,typeE,priceOfOnePiece,orderItemPrice);
 });
-});
+
+});//add item button ends here
+function add_item_to_estimate_table(itemcodeE,name,qty,type,rate,amount){
+  $("#EstimateBillTable").prepend('<tr id="' + itemcodeE + '"><th>' + itemcodeE + '</th><th>' + name + '</th><th>' + qty + '</th><th>' + type + '</th><th>' + rate + '</th><th>' + amount + '</th><th><a href="#" data-key="' + itemcodeE + '" class="card-footer-item btnEdit">Edit</a></th><th><a href="#" class="card-footer-item btnRemove"  data-key="' + itemcodeE + '">Remove</a></th></tr>');
+}
+function deduct_value_from_inventory_CaseBoxPiece(itemcode,quantityOrdered,oneCaseHasPieces,oneBoxHasPieces,oneCaseHasBoxes){
+  console.log("Deduct total case "+quantityOrdered%);
+  var deductCase="";
+  var deductBox="";
+  var deductPiece="";
+  /*database.ref('inventory/'+itemcode).once("value").then(function(data) {
+
+  });*/
+}
+$("#btnGenerateBill").click(function() {
+  $("#EstimateBillTable").append('<tr id="billTotal"><th>Total</th><th></th><th></th><th></th><th></th><th>' + estimateBillRate + '</th></tr>');
+  });
 /** estimate billing ends here*/
